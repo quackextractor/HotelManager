@@ -13,10 +13,4 @@
       <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.1" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Data\Helpers\" />
-      <Folder Include="Data\Implementations\" />
-      <Folder Include="Data\Interfaces\" />
-    </ItemGroup>
-
 </Project>

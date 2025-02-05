@@ -1,22 +1,23 @@
 using System.Configuration;
+using HotelManager.Data.Helpers;
 using Microsoft.Data.SqlClient;
 
 namespace HotelManager.UI;
 
 public partial class HlavniOkno : Form
 {
+    
+    private DatabaseConnection _databaseConnection;
+    private SqlConnection _connection;
+    
     public HlavniOkno()
     {
         InitializeComponent();
+        _databaseConnection = new DatabaseConnection();
     }
-
-    private string _connectionString;
-    private SqlConnection _connection;
     private void HlavniOkno_Load(object sender, EventArgs e)
     {
-        _connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-        _connection = new SqlConnection(_connectionString);
-        
+        _connection = _databaseConnection.CreateConnection();
     }
     
 
@@ -29,7 +30,7 @@ private void connect_Click(object sender, EventArgs e)
     }
     catch (Exception exception)
     {
-        MessageBox.Show(exception.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBox.Show(exception.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 }
 
