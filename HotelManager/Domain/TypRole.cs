@@ -1,6 +1,6 @@
-namespace HotelManager.Models;
+namespace HotelManager.Domain;
 
-public class StavObjednavky
+public class TypRole
 {
     public byte Id { get; set; }
     public string Nazev { get; set; }

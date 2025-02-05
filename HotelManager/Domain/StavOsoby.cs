@@ -1,6 +1,6 @@
-namespace HotelManager.Models;
+namespace HotelManager.Domain;
 
-public class TypRole
+public class StavOsoby
 {
     public byte Id { get; set; }
     public string Nazev { get; set; }

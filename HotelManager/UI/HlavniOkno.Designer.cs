@@ -1,4 +1,4 @@
-﻿namespace HotelManager;
+﻿namespace HotelManager.UI;
 
 partial class HlavniOkno
 {

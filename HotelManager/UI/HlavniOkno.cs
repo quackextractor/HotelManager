@@ -1,7 +1,7 @@
 using System.Configuration;
 using Microsoft.Data.SqlClient;
 
-namespace HotelManager;
+namespace HotelManager.UI;
 
 public partial class HlavniOkno : Form
 {

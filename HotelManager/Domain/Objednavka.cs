@@ -1,4 +1,4 @@
-namespace HotelManager.Models;
+namespace HotelManager.Domain;
 
 public class Objednavka
 {
