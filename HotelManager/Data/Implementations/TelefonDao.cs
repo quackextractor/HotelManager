@@ -113,5 +113,35 @@ namespace HotelManager.Data.Implementations
             }
             return list;
         }
+
+        /// <summary>
+        /// Searches for all Telefon records by person id.
+        /// </summary>
+        public List<Telefon> SearchByOsobaId(int osobaId)
+        {
+            var list = new List<Telefon>();
+            using (var connection = _db.CreateConnection())
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM Telefon WHERE osoba_id = @osoba_id";
+                    cmd.Parameters.AddWithValue("@osoba_id", osobaId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new Telefon
+                            {
+                                Id = Convert.ToInt32(reader["id"]),
+                                OsobaId = Convert.ToInt32(reader["osoba_id"]),
+                                Cislo = reader["cislo"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return list;
+        }
     }
 }

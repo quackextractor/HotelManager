@@ -29,7 +29,6 @@ namespace HotelManager.Data.Implementations
                         VALUES (@cena_za_noc, @datum_vystaveni, @datum_ubytovani, @pocet_noci, @status_id, @zaplaceno)";
                     
                     cmd.Parameters.AddWithValue("@cena_za_noc", objednavka.CenaZaNoc);
-                    // Note: cena_k_zaplaceni is computed in the database.
                     cmd.Parameters.AddWithValue("@datum_vystaveni", objednavka.DatumVystaveni);
                     cmd.Parameters.AddWithValue("@datum_ubytovani", objednavka.DatumUbytovani);
                     cmd.Parameters.AddWithValue("@pocet_noci", objednavka.PocetNoci);
@@ -102,7 +101,6 @@ namespace HotelManager.Data.Implementations
                             {
                                 Id = Convert.ToInt32(reader["id"]),
                                 CenaZaNoc = Convert.ToDecimal(reader["cena_za_noc"]),
-                                // cena_k_zaplaceni is computed by the DB.
                                 CenaKZaplaceni = Convert.ToDecimal(reader["cena_k_zaplaceni"]),
                                 DatumVystaveni = Convert.ToDateTime(reader["datum_vystaveni"]),
                                 DatumUbytovani = Convert.ToDateTime(reader["datum_ubytovani"]),
@@ -126,6 +124,41 @@ namespace HotelManager.Data.Implementations
                 using (var cmd = connection.CreateCommand())
                 {
                     cmd.CommandText = "SELECT * FROM Objednavka";
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new Objednavka
+                            {
+                                Id = Convert.ToInt32(reader["id"]),
+                                CenaZaNoc = Convert.ToDecimal(reader["cena_za_noc"]),
+                                CenaKZaplaceni = Convert.ToDecimal(reader["cena_k_zaplaceni"]),
+                                DatumVystaveni = Convert.ToDateTime(reader["datum_vystaveni"]),
+                                DatumUbytovani = Convert.ToDateTime(reader["datum_ubytovani"]),
+                                PocetNoci = Convert.ToInt32(reader["pocet_noci"]),
+                                StatusId = Convert.ToByte(reader["status_id"]),
+                                Zaplaceno = Convert.ToBoolean(reader["zaplaceno"])
+                            });
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Searches for Objednavka records by datum_ubytovani.
+        /// </summary>
+        public List<Objednavka> SearchByDatumUbytovani(DateTime datum)
+        {
+            var list = new List<Objednavka>();
+            using (var connection = _db.CreateConnection())
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM Objednavka WHERE datum_ubytovani = @datum_ubytovani";
+                    cmd.Parameters.AddWithValue("@datum_ubytovani", datum);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())

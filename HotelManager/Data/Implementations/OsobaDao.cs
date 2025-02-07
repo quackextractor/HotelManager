@@ -99,7 +99,7 @@ namespace HotelManager.Data.Implementations
                     {
                         if (reader.Read())
                         {
-                            return new Osoba
+                            var osoba = new Osoba
                             {
                                 Id = Convert.ToInt32(reader["id"]),
                                 Jmeno = reader["jmeno"].ToString(),
@@ -111,6 +111,7 @@ namespace HotelManager.Data.Implementations
                                 DatumRegistrace = Convert.ToDateTime(reader["datum_registrace"]),
                                 StatusId = Convert.ToByte(reader["status_id"])
                             };
+                            return osoba;
                         }
                     }
                 }
@@ -149,6 +150,76 @@ namespace HotelManager.Data.Implementations
                 }
             }
             return list;
+        }
+
+        /// <summary>
+        /// Searches for Osoba records by first or last name. 
+        /// </summary>
+        public List<Osoba> SearchByName(string searchTerm)
+        {
+            var result = new Dictionary<int, Osoba>();
+
+            using (var connection = _db.CreateConnection())
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT 
+                            o.id, o.jmeno, o.prijmeni, o.email, o.naposledy_navstiveno, o.datum_registrace, o.status_id,
+                            od.id AS objednavka_id, od.cena_za_noc, od.cena_k_zaplaceni, od.datum_vystaveni, 
+                            od.datum_ubytovani, od.pocet_noci, od.status_id AS objednavka_status_id, od.zaplaceno
+                        FROM Osoba o
+                        LEFT JOIN RoleVObjednavce r ON o.id = r.osoba_id
+                        LEFT JOIN Objednavka od ON r.objednavka_id = od.id
+                        WHERE o.jmeno LIKE @search OR o.prijmeni LIKE @search";
+                    
+                    cmd.Parameters.AddWithValue("@search", "%" + searchTerm + "%");
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int osobaId = Convert.ToInt32(reader["id"]);
+                            Osoba osoba;
+                            if (!result.TryGetValue(osobaId, out osoba))
+                            {
+                                osoba = new Osoba
+                                {
+                                    Id = osobaId,
+                                    Jmeno = reader["jmeno"].ToString(),
+                                    Prijmeni = reader["prijmeni"].ToString(),
+                                    Email = reader["email"].ToString(),
+                                    NaposledyNavstiveno = reader["naposledy_navstiveno"] != DBNull.Value 
+                                        ? (DateTime?)Convert.ToDateTime(reader["naposledy_navstiveno"]) 
+                                        : null,
+                                    DatumRegistrace = Convert.ToDateTime(reader["datum_registrace"]),
+                                    StatusId = Convert.ToByte(reader["status_id"]),
+                                    Objednavkas = new List<Objednavka>()
+                                };
+                                result.Add(osobaId, osoba);
+                            }
+                            
+                            if (reader["objednavka_id"] != DBNull.Value)
+                            {
+                                var objednavka = new Objednavka
+                                {
+                                    Id = Convert.ToInt32(reader["objednavka_id"]),
+                                    CenaZaNoc = Convert.ToDecimal(reader["cena_za_noc"]),
+                                    CenaKZaplaceni = Convert.ToDecimal(reader["cena_k_zaplaceni"]),
+                                    DatumVystaveni = Convert.ToDateTime(reader["datum_vystaveni"]),
+                                    DatumUbytovani = Convert.ToDateTime(reader["datum_ubytovani"]),
+                                    PocetNoci = Convert.ToInt32(reader["pocet_noci"]),
+                                    StatusId = Convert.ToByte(reader["objednavka_status_id"]),
+                                    Zaplaceno = Convert.ToBoolean(reader["zaplaceno"])
+                                };
+                                osoba.Objednavkas.Add(objednavka);
+                            }
+                        }
+                    }
+                }
+            }
+            return new List<Osoba>(result.Values);
         }
     }
 }

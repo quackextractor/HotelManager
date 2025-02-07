@@ -138,5 +138,38 @@ namespace HotelManager.Data.Implementations
             }
             return list;
         }
+
+        /// <summary>
+        /// Searches for payments by order.
+        /// </summary>
+        public List<Platba> SearchByObjednavkaId(int objednavkaId)
+        {
+            var list = new List<Platba>();
+            using (var connection = _db.CreateConnection())
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM Platba WHERE objednavka_id = @objednavka_id";
+                    cmd.Parameters.AddWithValue("@objednavka_id", objednavkaId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new Platba
+                            {
+                                Id = Convert.ToInt32(reader["id"]),
+                                ObjednavkaId = Convert.ToInt32(reader["objednavka_id"]),
+                                Castka = Convert.ToDecimal(reader["castka"]),
+                                DatumPlatby = Convert.ToDateTime(reader["datum_platby"]),
+                                ZpusobPlatbyId = Convert.ToByte(reader["zpusob_platby_id"]),
+                                Poznamka = reader["poznamka"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return list;
+        }
     }
 }
