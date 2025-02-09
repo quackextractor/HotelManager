@@ -26,9 +26,6 @@ public partial class HlavniOkno : Form
         {
             _connection.Open();
             MessageBox.Show("Připojení se zdařilo", "SUCCESS", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-            // Enable the test form button after successful connection
-            btnOpenTestForm.Enabled = true;
         }
         catch (Exception exception)
         {
@@ -39,11 +36,5 @@ public partial class HlavniOkno : Form
     private void quit_Click(object sender, EventArgs e)
     {
         Application.Exit();
-    }
-    
-    private void btnOpenTestForm_Click(object sender, EventArgs e)
-    {
-        var testForm = new TestovaciOkno();
-        testForm.Show();
     }
 }

@@ -17,7 +17,6 @@ partial class HlavniOkno
     {
         CONNECT = new Button();
         quit = new Button();
-        btnOpenTestForm = new Button();
         
         SuspendLayout();
         
@@ -39,21 +38,10 @@ partial class HlavniOkno
         quit.UseVisualStyleBackColor = true;
         quit.Click += quit_Click;
         
-        // btnOpenTestForm
-        btnOpenTestForm.Location = new Point(128, 260);
-        btnOpenTestForm.Name = "btnOpenTestForm";
-        btnOpenTestForm.Size = new Size(137, 101);
-        btnOpenTestForm.TabIndex = 2;
-        btnOpenTestForm.Text = "Open Test Form";
-        btnOpenTestForm.UseVisualStyleBackColor = true;
-        btnOpenTestForm.Enabled = false;  // Initially disabled until connection is established
-        btnOpenTestForm.Click += btnOpenTestForm_Click;
-        
         // HlavniOkno
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(800, 450);
-        Controls.Add(btnOpenTestForm);
         Controls.Add(quit);
         Controls.Add(CONNECT);
         Name = "HlavniOkno";
@@ -64,5 +52,4 @@ partial class HlavniOkno
 
     private Button CONNECT;
     private Button quit;
-    private Button btnOpenTestForm;
 }
