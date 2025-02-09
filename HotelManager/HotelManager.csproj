@@ -17,6 +17,24 @@
       <Compile Update="UI\MainWindow.cs">
         <SubType>Form</SubType>
       </Compile>
+      <Compile Update="UI\AddOrderForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\SearchOrderForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\EditOrderForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\TypeManagementForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\ConfigLoaderForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\AddPersonForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>
