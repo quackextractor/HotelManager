@@ -8,7 +8,6 @@ namespace HotelManager.UI
         private System.Windows.Forms.ToolStripMenuItem addOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchOrderToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem spravaTypuToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageTypesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadConfigToolStripMenuItem;
 
@@ -22,7 +21,6 @@ namespace HotelManager.UI
             this.addOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.spravaTypuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageTypesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
@@ -32,7 +30,6 @@ namespace HotelManager.UI
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 this.objednavkaToolStripMenuItem,
-                this.spravaTypuToolStripMenuItem,
                 this.loadConfigToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -69,14 +66,6 @@ namespace HotelManager.UI
             this.searchOrderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.searchOrderToolStripMenuItem.Text = "Vyhledat objednávku";
             this.searchOrderToolStripMenuItem.Click += new System.EventHandler(this.searchOrderToolStripMenuItem_Click);
-            // 
-            // spravaTypuToolStripMenuItem
-            // 
-            this.spravaTypuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.manageTypesToolStripMenuItem});
-            this.spravaTypuToolStripMenuItem.Name = "spravaTypuToolStripMenuItem";
-            this.spravaTypuToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
-            this.spravaTypuToolStripMenuItem.Text = "Správa typů";
             // 
             // loadConfigToolStripMenuItem
             // 
