@@ -13,7 +13,7 @@ namespace HotelManager.Data.Utility
         // Privátní konstruktor zajistí, že instance lze vytvořit pouze zde
         private SqlConnectionSingleton()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDbConnection"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             Connection = new SqlConnection(connectionString);
         }
 

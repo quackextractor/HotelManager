@@ -78,13 +78,6 @@ namespace HotelManager.UI
             this.spravaTypuToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
             this.spravaTypuToolStripMenuItem.Text = "Správa typů";
             // 
-            // manageTypesToolStripMenuItem
-            // 
-            this.manageTypesToolStripMenuItem.Name = "manageTypesToolStripMenuItem";
-            this.manageTypesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.manageTypesToolStripMenuItem.Text = "Správa typů";
-            this.manageTypesToolStripMenuItem.Click += new System.EventHandler(this.manageTypesToolStripMenuItem_Click);
-            // 
             // loadConfigToolStripMenuItem
             // 
             this.loadConfigToolStripMenuItem.Name = "loadConfigToolStripMenuItem";

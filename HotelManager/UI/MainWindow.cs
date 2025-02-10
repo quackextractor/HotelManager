@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using HotelManager.Data.Utility;
 
 namespace HotelManager.UI
 {
@@ -8,7 +9,20 @@ namespace HotelManager.UI
         public MainWindow()
         {
             InitializeComponent();
+
+            // Ověříme spojení s databází při spuštění hlavního okna
+            try
+            {
+                var connection = SqlConnectionSingleton.Instance.Connection;
+                connection.Open();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba připojení k databázi: " + ex.Message, "Database Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+        
 
         // Otevře formulář pro přidání nové objednávky
         private void addOrderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -37,15 +51,6 @@ namespace HotelManager.UI
             using (SearchOrderForm searchOrderForm = new SearchOrderForm())
             {
                 searchOrderForm.ShowDialog();
-            }
-        }
-
-        // Otevře formulář pro správu typů (např. StavOsoby, RoleVObjednavce, atd.)
-        private void manageTypesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (TypeManagementForm typeManagementForm = new TypeManagementForm())
-            {
-                typeManagementForm.ShowDialog();
             }
         }
 
