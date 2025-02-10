@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using HotelManager.Data;
 using HotelManager.Data.Implementations;
 using HotelManager.Domain;
 
@@ -38,7 +43,27 @@ namespace HotelManager.UI
                     return;
                 }
             }
+            else if (searchType == "Číslo místnosti")
+            {
+                orders = orderDao.SearchByRoomNumber(txtSearch.Text).ToList();
+            }
             dgvOrders.DataSource = orders;
+        }
+
+        // Dvojklik na řádku DataGridView – otevře formulář pro úpravu vybrané objednávky
+        private void dgvOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                Order selectedOrder = dgvOrders.Rows[e.RowIndex].DataBoundItem as Order;
+                if (selectedOrder != null)
+                {
+                    using (EditOrderForm editForm = new EditOrderForm(selectedOrder.Id))
+                    {
+                        editForm.ShowDialog();
+                    }
+                }
+            }
         }
     }
 }

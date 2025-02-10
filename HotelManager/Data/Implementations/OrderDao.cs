@@ -252,4 +252,40 @@ public class OrderDao : IOrderDao
 
         return orders;
     }
+    
+    public IEnumerable<Order> SearchByRoomNumber(string roomNumber)
+    {
+        List<Order> orders = new List<Order>();
+        string sql = @"SELECT o.* 
+                   FROM [Order] o 
+                   JOIN Room r ON o.room_id = r.id 
+                   WHERE r.room_number LIKE @roomNumber";
+        using (SqlCommand cmd = new SqlCommand(sql, connection))
+        {
+            cmd.Parameters.AddWithValue("@roomNumber", "%" + roomNumber + "%");
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Order order = new Order
+                    {
+                        Id = Convert.ToInt32(reader["id"]),
+                        PricePerNight = Convert.ToDouble(reader["price_per_night"]),
+                        Nights = Convert.ToInt32(reader["nights"]),
+                        OrderDate = Convert.ToDateTime(reader["order_date"]),
+                        CheckinDate = Convert.ToDateTime(reader["checkin_date"]),
+                        Status = reader["status"].ToString(),
+                        Paid = Convert.ToBoolean(reader["paid"]),
+                        TotalPrice = Convert.ToDouble(reader["total_price"]),
+                        RoomId = reader["room_id"] != DBNull.Value ? (int?)Convert.ToInt32(reader["room_id"]) : null
+                    };
+                    orders.Add(order);
+                }
+            }
+            connection.Close();
+        }
+        return orders;
+    }
 }

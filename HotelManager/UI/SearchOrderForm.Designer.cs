@@ -28,7 +28,8 @@ namespace HotelManager.UI
             this.cmbSearchType.Items.AddRange(new object[] {
             "Číslo objednávky",
             "Jméno osoby",
-            "Datum"});
+            "Datum",
+            "Číslo místnosti"});
             this.cmbSearchType.Location = new System.Drawing.Point(12, 29);
             this.cmbSearchType.Name = "cmbSearchType";
             this.cmbSearchType.Size = new System.Drawing.Size(150, 23);
@@ -59,6 +60,7 @@ namespace HotelManager.UI
             this.dgvOrders.RowTemplate.Height = 25;
             this.dgvOrders.Size = new System.Drawing.Size(600, 300);
             this.dgvOrders.TabIndex = 3;
+            this.dgvOrders.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvOrders_CellDoubleClick);
             // 
             // lblSearchType
             // 
