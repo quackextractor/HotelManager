@@ -10,5 +10,10 @@ namespace HotelManager.Domain
         public string Status { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime? LastVisitDate { get; set; }
+        
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName} (Email: {Email}, Tel: {Phone}, Status: {Status})";
+        }
     }
 }
