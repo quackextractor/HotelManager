@@ -9,9 +9,6 @@ namespace HotelManager.UI
         private System.Windows.Forms.DataGridView dgvOrders;
         private System.Windows.Forms.Label lblSearchType;
 
-        /// <summary>
-        /// Metoda pro inicializaci ovládacích prvků
-        /// </summary>
         private void InitializeComponent()
         {
             this.cmbSearchType = new System.Windows.Forms.ComboBox();
@@ -86,9 +83,6 @@ namespace HotelManager.UI
             this.PerformLayout();
         }
 
-        /// <summary>
-        /// Uvolnění prostředků.
-        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))

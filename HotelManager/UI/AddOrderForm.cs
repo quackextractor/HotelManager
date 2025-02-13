@@ -49,6 +49,22 @@ namespace HotelManager.UI
                 }
             }
         }
+        
+        
+        // Přidejte tuto metodu do AddOrderForm.cs
+        private void btnAddRoom_Click(object sender, EventArgs e)
+        {
+            using (AddRoomForm addRoomForm = new AddRoomForm())
+            {
+                if (addRoomForm.ShowDialog() == DialogResult.OK)
+                {
+                    // Po úspěšném přidání místnosti obnovíme ComboBox místností.
+                    LoadRoomDropdown();
+                    MessageBox.Show("Nová místnost je nyní k dispozici.");
+                }
+            }
+        }
+
 
         // Odebrání vybrané osoby
         private void btnRemovePerson_Click(object sender, EventArgs e)

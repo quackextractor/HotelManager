@@ -32,6 +32,9 @@
       <Compile Update="UI\AddPersonForm.cs">
         <SubType>Form</SubType>
       </Compile>
+      <Compile Update="UI\AddRoomForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>

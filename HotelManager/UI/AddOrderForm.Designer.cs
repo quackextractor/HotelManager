@@ -1,5 +1,6 @@
 namespace HotelManager.UI
 {
+    // TODO: Fix order not showing existing people, people not being searchable.
     partial class AddOrderForm
     {
         private System.ComponentModel.IContainer components = null;
@@ -18,6 +19,7 @@ namespace HotelManager.UI
         private System.Windows.Forms.Button btnRemovePerson;
         private System.Windows.Forms.ListBox lstPersons;
         private System.Windows.Forms.Button btnSaveOrder;
+        private System.Windows.Forms.Button btnAddRoom;
 
         /// <summary>
         /// Metoda pro inicializaci ovládacích prvků
@@ -39,6 +41,7 @@ namespace HotelManager.UI
             this.btnRemovePerson = new System.Windows.Forms.Button();
             this.lstPersons = new System.Windows.Forms.ListBox();
             this.btnSaveOrder = new System.Windows.Forms.Button();
+            this.btnAddRoom = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblPricePerNight
@@ -133,6 +136,16 @@ namespace HotelManager.UI
             this.cmbRoom.Size = new System.Drawing.Size(121, 23);
             this.cmbRoom.TabIndex = 10;
             // 
+            // btnAddRoom
+            // 
+            this.btnAddRoom.Location = new System.Drawing.Point(250, 187);
+            this.btnAddRoom.Name = "btnAddRoom";
+            this.btnAddRoom.Size = new System.Drawing.Size(75, 23);
+            this.btnAddRoom.TabIndex = 15;
+            this.btnAddRoom.Text = "Přidat místnost";
+            this.btnAddRoom.UseVisualStyleBackColor = true;
+            this.btnAddRoom.Click += new System.EventHandler(this.btnAddRoom_Click);
+            // 
             // btnAddPerson
             // 
             this.btnAddPerson.Location = new System.Drawing.Point(12, 225);
@@ -190,6 +203,7 @@ namespace HotelManager.UI
             this.Controls.Add(this.lblNights);
             this.Controls.Add(this.txtPricePerNight);
             this.Controls.Add(this.lblPricePerNight);
+            this.Controls.Add(this.btnAddRoom);
             this.Name = "AddOrderForm";
             this.Text = "Přidat objednávku";
             this.ResumeLayout(false);

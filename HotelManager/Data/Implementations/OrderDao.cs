@@ -18,15 +18,16 @@ public class OrderDao : IOrderDao
     public Order GetById(int id)
     {
         Order order = null;
-        var sql = "SELECT * FROM [Order] WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        string sql = "SELECT * FROM [Order] WHERE id = @id";
+        using (SqlCommand cmd = new SqlCommand(sql, connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
             if (connection.State != ConnectionState.Open)
                 connection.Open();
-            using (var reader = cmd.ExecuteReader())
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
+                {
                     order = new Order
                     {
                         Id = Convert.ToInt32(reader["id"]),
@@ -37,16 +38,54 @@ public class OrderDao : IOrderDao
                         Status = reader["status"].ToString(),
                         Paid = Convert.ToBoolean(reader["paid"]),
                         TotalPrice = Convert.ToDouble(reader["total_price"]),
-                        RoomId = reader["room_id"] != DBNull.Value ? Convert.ToInt32(reader["room_id"]) : null
+                        RoomId = reader["room_id"] != DBNull.Value ? (int?)Convert.ToInt32(reader["room_id"]) : null
                     };
+                }
             }
-
             connection.Close();
         }
-
+        if (order != null)
+        {
+            order.Persons = LoadPersonsForOrder(order.Id);
+        }
         return order;
     }
 
+    private List<Person> LoadPersonsForOrder(int orderId)
+    {
+        List<Person> persons = new List<Person>();
+        string sql = @"SELECT p.* 
+                   FROM Person p
+                   INNER JOIN OrderRole orl ON p.id = orl.person_id
+                   WHERE orl.order_id = @orderId";
+        using (SqlCommand cmd = new SqlCommand(sql, connection))
+        {
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Person person = new Person
+                    {
+                        Id = Convert.ToInt32(reader["id"]),
+                        FirstName = reader["first_name"].ToString(),
+                        LastName = reader["last_name"].ToString(),
+                        Email = reader["email"].ToString(),
+                        Phone = reader["phone"].ToString(),
+                        Status = reader["status"].ToString(),
+                        RegistrationDate = Convert.ToDateTime(reader["registration_date"]),
+                        LastVisitDate = reader["last_visit_date"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(reader["last_visit_date"]) : null
+                    };
+                    persons.Add(person);
+                }
+            }
+            connection.Close();
+        }
+        return persons;
+    }
+    
     public IEnumerable<Order> GetAll()
     {
         List<Order> orders = new List<Order>();
@@ -181,22 +220,22 @@ public class OrderDao : IOrderDao
 
     public IEnumerable<Order> SearchByPersonName(string personName)
     {
-        // Vyhledávání pomocí JOIN s tabulkami OrderRole a Person
         List<Order> orders = new List<Order>();
-        var sql = @"SELECT o.* FROM [Order] o 
-                           JOIN OrderRole orl ON o.id = orl.order_id
-                           JOIN Person p ON orl.person_id = p.id
-                           WHERE p.first_name LIKE @personName OR p.last_name LIKE @personName";
-        using (var cmd = new SqlCommand(sql, connection))
+        string sql = @"SELECT DISTINCT o.*
+                   FROM [Order] o 
+                   INNER JOIN OrderRole orl ON o.id = orl.order_id
+                   INNER JOIN Person p ON orl.person_id = p.id
+                   WHERE p.first_name LIKE @personName OR p.last_name LIKE @personName";
+        using (SqlCommand cmd = new SqlCommand(sql, connection))
         {
             cmd.Parameters.AddWithValue("@personName", "%" + personName + "%");
             if (connection.State != ConnectionState.Open)
                 connection.Open();
-            using (var reader = cmd.ExecuteReader())
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    var order = new Order
+                    Order order = new Order
                     {
                         Id = Convert.ToInt32(reader["id"]),
                         PricePerNight = Convert.ToDouble(reader["price_per_night"]),
@@ -206,17 +245,17 @@ public class OrderDao : IOrderDao
                         Status = reader["status"].ToString(),
                         Paid = Convert.ToBoolean(reader["paid"]),
                         TotalPrice = Convert.ToDouble(reader["total_price"]),
-                        RoomId = reader["room_id"] != DBNull.Value ? Convert.ToInt32(reader["room_id"]) : null
+                        RoomId = reader["room_id"] != DBNull.Value ? (int?)Convert.ToInt32(reader["room_id"]) : null
                     };
                     orders.Add(order);
                 }
             }
-
             connection.Close();
         }
-
         return orders;
     }
+
+
 
     public IEnumerable<Order> SearchByDate(DateTime date)
     {
@@ -258,7 +297,7 @@ public class OrderDao : IOrderDao
         List<Order> orders = new List<Order>();
         string sql = @"SELECT o.* 
                    FROM [Order] o 
-                   JOIN Room r ON o.room_id = r.id 
+                   INNER JOIN Room r ON o.room_id = r.id 
                    WHERE r.room_number LIKE @roomNumber";
         using (SqlCommand cmd = new SqlCommand(sql, connection))
         {
