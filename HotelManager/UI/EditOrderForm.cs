@@ -10,7 +10,6 @@ namespace HotelManager.UI
     {
         private Order order;
 
-        // Konstruktor očekává ID objednávky, kterou chceme upravit
         public EditOrderForm(int orderId)
         {
             InitializeComponent();
@@ -26,7 +25,6 @@ namespace HotelManager.UI
             cmbStatus.Items.Add("confirmed");
         }
 
-        // Načte dostupné místnosti a naplní ComboBox
         private void LoadRoomDropdown()
         {
             cmbRoom.Items.Clear();
@@ -34,13 +32,12 @@ namespace HotelManager.UI
             var rooms = roomDao.GetAll();
             foreach (var room in rooms)
             {
-                cmbRoom.Items.Add(new ComboBoxItem(room.RoomNumber, room.Id));
+                cmbRoom.Items.Add(new AddOrderForm.ComboBoxItem(room.RoomNumber, room.Id));
             }
             if (cmbRoom.Items.Count > 0)
                 cmbRoom.SelectedIndex = 0;
         }
 
-        // Načte objednávku z DB a naplní ovládací prvky
         private void LoadOrder(int orderId)
         {
             OrderDao orderDao = new OrderDao();
@@ -52,11 +49,9 @@ namespace HotelManager.UI
                 dtpCheckinDate.Value = order.CheckinDate;
                 cmbStatus.SelectedItem = order.Status;
                 chkPaid.Checked = order.Paid;
-
-                // Nastavení čísla místnosti podle RoomId
                 if (order.RoomId.HasValue)
                 {
-                    foreach (ComboBoxItem item in cmbRoom.Items)
+                    foreach (AddOrderForm.ComboBoxItem item in cmbRoom.Items)
                     {
                         if (item.Value == order.RoomId.Value)
                         {
@@ -65,15 +60,11 @@ namespace HotelManager.UI
                         }
                     }
                 }
-
-                // Načtení osob do ListBoxu
                 lstPersons.Items.Clear();
                 if (order.Persons != null)
                 {
                     foreach (Person person in order.Persons)
-                    {
                         lstPersons.Items.Add(person);
-                    }
                 }
             }
             else
@@ -83,12 +74,16 @@ namespace HotelManager.UI
             }
         }
 
-        // Uložení upravené objednávky
         private void btnSaveChanges_Click(object sender, EventArgs e)
         {
             if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
             {
                 MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.");
+                return;
+            }
+            if (dtpCheckinDate.Value.Date < DateTime.Today)
+            {
+                MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.");
                 return;
             }
 
@@ -100,24 +95,52 @@ namespace HotelManager.UI
 
             if (cmbRoom.SelectedItem != null)
             {
-                ComboBoxItem selectedRoom = cmbRoom.SelectedItem as ComboBoxItem;
-                order.RoomId = selectedRoom.Value;
+                var selectedRoom = cmbRoom.SelectedItem as AddOrderForm.ComboBoxItem;
+                order.RoomId = selectedRoom?.Value;
             }
 
-            // Aktualizace seznamu osob
             order.Persons = new System.Collections.Generic.List<Person>();
             foreach (var item in lstPersons.Items)
             {
                 if (item is Person person)
-                {
                     order.Persons.Add(person);
-                }
             }
 
             try
             {
+                PersonDao personDao = new PersonDao();
                 OrderDao orderDao = new OrderDao();
+                OrderRoleDao orderRoleDao = new OrderRoleDao();
+
+                // Aktualizace objednávky
                 orderDao.Update(order);
+
+                // Nejprve odstranit staré role
+                orderRoleDao.DeleteByOrderId(order.Id);
+
+                foreach (Person person in order.Persons)
+                {
+                    // Zkontrolovat, zda osoba už existuje v databázi
+                    Person existingPerson = personDao.GetByEmail(person.Email);
+                    if (existingPerson != null)
+                    {
+                        person.Id = existingPerson.Id; // Použít existující ID
+                    }
+                    else
+                    {
+                        personDao.Insert(person); // Pouze pokud neexistuje
+                    }
+
+                    // Přidání nové role
+                    OrderRole role = new OrderRole
+                    {
+                        OrderId = order.Id,
+                        PersonId = person.Id,
+                        Role = "customer"
+                    };
+                    orderRoleDao.Insert(role);
+                }
+
                 MessageBox.Show("Objednávka byla úspěšně upravena.");
                 this.Close();
             }
@@ -125,9 +148,9 @@ namespace HotelManager.UI
             {
                 MessageBox.Show("Chyba při úpravě objednávky: " + ex.Message);
             }
+
         }
 
-        // Přidání osoby – otevření formuláře AddPersonForm
         private void btnAddPerson_Click(object sender, EventArgs e)
         {
             using (AddPersonForm addPersonForm = new AddPersonForm())
@@ -140,13 +163,10 @@ namespace HotelManager.UI
             }
         }
 
-        // Odebrání vybrané osoby
         private void btnRemovePerson_Click(object sender, EventArgs e)
         {
             if (lstPersons.SelectedIndex >= 0)
-            {
                 lstPersons.Items.RemoveAt(lstPersons.SelectedIndex);
-            }
         }
     }
 }

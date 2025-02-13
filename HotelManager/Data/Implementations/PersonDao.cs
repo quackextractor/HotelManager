@@ -182,4 +182,49 @@ public class PersonDao : IPersonDao
 
         return persons;
     }
+
+    public Person GetByEmail(string personEmail)
+    {
+        try
+        {
+            Person person = null;
+            var sql = "SELECT * FROM Person WHERE email = @Email";
+            using (var cmd = new SqlCommand(sql, connection))
+            {
+                cmd.Parameters.AddWithValue("@Email", personEmail);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        person = new Person
+                        {
+                            Id = Convert.ToInt32(reader["id"]),
+                            FirstName = reader["first_name"].ToString(),
+                            LastName = reader["last_name"].ToString(),
+                            Email = reader["email"].ToString(),
+                            Phone = reader["phone"].ToString(),
+                            Status = reader["status"].ToString(),
+                            RegistrationDate = Convert.ToDateTime(reader["registration_date"]),
+                            LastVisitDate = reader["last_visit_date"] != DBNull.Value
+                                ? Convert.ToDateTime(reader["last_visit_date"])
+                                : null
+                        };
+                    }
+                }
+            }
+            return person;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Chyba při získávání osoby podle e-mailu: " + ex.Message, ex);
+        }
+        finally
+        {
+            if (connection.State == ConnectionState.Open)
+                connection.Close();
+        }
+    }
+
 }

@@ -114,4 +114,17 @@ public class OrderRoleDao : IOrderRoleDao
             connection.Close();
         }
     }
+
+    public void DeleteByOrderId(int orderId)
+    {
+        var sql = "DELETE FROM OrderRole WHERE order_id = @orderId";
+        using (var cmd = new SqlCommand(sql, connection))
+        {
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
+            cmd.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
 }
