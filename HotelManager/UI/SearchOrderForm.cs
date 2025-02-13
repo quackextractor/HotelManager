@@ -13,32 +13,62 @@ namespace HotelManager.UI
         {
             InitializeComponent();
             cmbSearchType.SelectedIndex = 0;
+            cmbSearchType.SelectedIndexChanged += CmbSearchType_SelectedIndexChanged;
+            dtpSearchDate.Visible = false;
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            string searchType = cmbSearchType.SelectedItem.ToString();
+            string searchType = cmbSearchType.SelectedItem?.ToString() ?? string.Empty;
             List<Order> orders = new List<Order>();
             OrderDao orderDao = new OrderDao();
 
-            if (searchType == "Číslo objednávky")
-                orders = orderDao.SearchByOrderNumber(txtSearch.Text).ToList();
-            else if (searchType == "Jméno osoby")
-                orders = orderDao.SearchByPersonName(txtSearch.Text).ToList();
-            else if (searchType == "Datum")
+            try
             {
-                if (DateTime.TryParse(txtSearch.Text, out DateTime date))
-                    orders = orderDao.SearchByDate(date).ToList();
-                else
+                switch (searchType)
                 {
-                    MessageBox.Show("Zadejte platné datum.");
-                    return;
+                    case "Číslo objednávky":
+                        orders = orderDao.SearchByOrderNumber(txtSearch.Text).ToList();
+                        break;
+
+                    case "Jméno osoby":
+                        orders = orderDao.SearchByPersonName(txtSearch.Text).ToList();
+                        break;
+
+                    case "Datum":
+                        orders = orderDao.SearchByDate(dtpSearchDate.Value).ToList();
+                        break;
+
+                    case "Číslo místnosti":
+                        orders = orderDao.SearchByRoomNumber(txtSearch.Text).ToList();
+                        break;
+
+                    default:
+                        MessageBox.Show("Neplatný typ vyhledávání.");
+                        return;
                 }
             }
-            else if (searchType == "Číslo místnosti")
-                orders = orderDao.SearchByRoomNumber(txtSearch.Text).ToList();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Chyba při vyhledávání: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             dgvOrders.DataSource = orders;
+        }
+
+        private void CmbSearchType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbSearchType.SelectedItem.ToString() == "Datum")
+            {
+                txtSearch.Visible = false;
+                dtpSearchDate.Visible = true;
+            }
+            else
+            {
+                txtSearch.Visible = true;
+                dtpSearchDate.Visible = false;
+            }
         }
 
         private void dgvOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

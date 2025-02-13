@@ -8,11 +8,13 @@ namespace HotelManager.UI
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.DataGridView dgvOrders;
         private System.Windows.Forms.Label lblSearchType;
+        private System.Windows.Forms.DateTimePicker dtpSearchDate; // Added DateTimePicker
 
         private void InitializeComponent()
         {
             this.cmbSearchType = new System.Windows.Forms.ComboBox();
             this.txtSearch = new System.Windows.Forms.TextBox();
+            this.dtpSearchDate = new System.Windows.Forms.DateTimePicker(); // Initialize DateTimePicker
             this.btnSearch = new System.Windows.Forms.Button();
             this.dgvOrders = new System.Windows.Forms.DataGridView();
             this.lblSearchType = new System.Windows.Forms.Label();
@@ -38,6 +40,15 @@ namespace HotelManager.UI
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(150, 23);
             this.txtSearch.TabIndex = 1;
+            // 
+            // dtpSearchDate
+            // 
+            this.dtpSearchDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpSearchDate.Location = new System.Drawing.Point(180, 29);
+            this.dtpSearchDate.Name = "dtpSearchDate";
+            this.dtpSearchDate.Size = new System.Drawing.Size(150, 23);
+            this.dtpSearchDate.TabIndex = 1;
+            this.dtpSearchDate.Visible = false; // Initially hidden
             // 
             // btnSearch
             // 
@@ -75,6 +86,7 @@ namespace HotelManager.UI
             this.Controls.Add(this.dgvOrders);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.txtSearch);
+            this.Controls.Add(this.dtpSearchDate);
             this.Controls.Add(this.cmbSearchType);
             this.Name = "SearchOrderForm";
             this.Text = "Vyhledat objednávku";
