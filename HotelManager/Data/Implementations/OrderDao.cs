@@ -123,8 +123,10 @@ public class OrderDao : IOrderDao
     public void Insert(Order order)
     {
         var sql = @"INSERT INTO [Order] 
-                           (price_per_night, nights, order_date, checkin_date, status, paid, room_id) 
-                           VALUES (@price_per_night, @nights, @order_date, @checkin_date, @status, @paid, @room_id)";
+                       (price_per_night, nights, order_date, checkin_date, status, paid, room_id) 
+                       VALUES (@price_per_night, @nights, @order_date, @checkin_date, @status, @paid, @room_id);
+                SELECT SCOPE_IDENTITY();"; // Retrieve the newly generated ID
+
         using (var cmd = new SqlCommand(sql, connection))
         {
             cmd.Parameters.AddWithValue("@price_per_night", order.PricePerNight);
@@ -134,9 +136,17 @@ public class OrderDao : IOrderDao
             cmd.Parameters.AddWithValue("@status", order.Status);
             cmd.Parameters.AddWithValue("@paid", order.Paid);
             cmd.Parameters.AddWithValue("@room_id", order.RoomId.HasValue ? order.RoomId.Value : DBNull.Value);
+
             if (connection.State != ConnectionState.Open)
                 connection.Open();
-            cmd.ExecuteNonQuery();
+
+            // Execute the query and retrieve the new ID
+            object result = cmd.ExecuteScalar();
+            if (result != null)
+            {
+                order.Id = Convert.ToInt32(result); // Assign the new ID to the Order object
+            }
+
             connection.Close();
         }
     }

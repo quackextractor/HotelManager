@@ -1,6 +1,5 @@
 namespace HotelManager.UI
 {
-    // TODO: Fix order not showing existing people, people not being searchable.
     partial class AddOrderForm
     {
         private System.ComponentModel.IContainer components = null;
