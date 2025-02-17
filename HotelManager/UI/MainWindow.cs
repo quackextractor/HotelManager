@@ -6,25 +6,56 @@ namespace HotelManager.UI
 {
     public partial class MainWindow : Form
     {
+        private bool _isConnectionValid;
+
         public MainWindow()
         {
             InitializeComponent();
+            this.Shown += MainWindow_Shown;
+        }
 
-            // Ověříme spojení s databází při spuštění hlavního okna
+        
+        private void MainWindow_Shown(object? sender, EventArgs e)
+        {
+            VerifyDatabaseConnection();
+            UpdateMenuState();
+        }
+
+        private void VerifyDatabaseConnection()
+        {
             try
             {
                 var connection = SqlConnectionSingleton.Instance.Connection;
                 connection.Open();
                 connection.Close();
+                _isConnectionValid = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba připojení k databázi: " + ex.Message, "Database Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _isConnectionValid = false;
+                MessageBox.Show($"Chyba připojení k databázi: {ex.Message}\nProsím nakonfigurujte připojení.", 
+                    "Database Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void UpdateMenuState()
+        {
+            objednavkaToolStripMenuItem.Enabled = _isConnectionValid;
+            loadConfigToolStripMenuItem.Enabled = _isConnectionValid;
+        }
+
+        private void loadConfigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (ConfigLoaderForm dataLoaderForm = new ConfigLoaderForm())
+            {
+                if (dataLoaderForm.ShowDialog() == DialogResult.OK)
+                {
+                    VerifyDatabaseConnection();
+                    UpdateMenuState();
+                }
             }
         }
         
-
-        // Otevře formulář pro přidání nové objednávky
         private void addOrderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (AddOrderForm addOrderForm = new AddOrderForm())
@@ -33,33 +64,20 @@ namespace HotelManager.UI
             }
         }
 
-        // Otevře formulář pro editaci objednávky
-        // Opraveno: předáváme do konstruktoru identifikátor objednávky (např. 1)
         private void editOrderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Poznámka: V praxi byste měli získat skutečné ID objednávky, kterou chcete upravit.
-            int orderId = 1; // Ukázkové ID objednávky
+            int orderId = 1;
             using (EditOrderForm editOrderForm = new EditOrderForm(orderId))
             {
                 editOrderForm.ShowDialog();
             }
         }
 
-        // Otevře formulář pro vyhledávání objednávek
         private void searchOrderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (SearchOrderForm searchOrderForm = new SearchOrderForm())
             {
                 searchOrderForm.ShowDialog();
-            }
-        }
-
-        // Otevře formulář pro načítání konfigurace
-        private void loadConfigToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (ConfigLoaderForm configLoaderForm = new ConfigLoaderForm())
-            {
-                configLoaderForm.ShowDialog();
             }
         }
     }

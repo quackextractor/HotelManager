@@ -4,23 +4,23 @@ using System.Windows.Forms;
 
 namespace HotelManager.UI
 {
-    public partial class ConfigLoaderForm : Form
+    public partial class DataLoaderForm : Form
     {
-        public ConfigLoaderForm()
+        public DataLoaderForm()
         {
             InitializeComponent();
             this.AllowDrop = true;
-            this.DragEnter += ConfigLoaderForm_DragEnter;
-            this.DragDrop += ConfigLoaderForm_DragDrop;
+            this.DragEnter += DataLoaderForm_DragEnter;
+            this.DragDrop += DataLoaderForm_DragDrop;
         }
 
-        private void ConfigLoaderForm_DragEnter(object sender, DragEventArgs e)
+        private void DataLoaderForm_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Copy;
         }
 
-        private void ConfigLoaderForm_DragDrop(object sender, DragEventArgs e)
+        private void DataLoaderForm_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files.Length > 0)

@@ -35,6 +35,9 @@
       <Compile Update="UI\AddRoomForm.cs">
         <SubType>Form</SubType>
       </Compile>
+      <Compile Update="UI\DataLoaderForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>
