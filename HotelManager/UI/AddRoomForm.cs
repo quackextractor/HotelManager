@@ -8,6 +8,7 @@ public partial class AddRoomForm : Form
     public AddRoomForm()
     {
         InitializeComponent();
+        this.FormBorderStyle = FormBorderStyle.FixedSingle;
     }
 
     // Uloží novou místnost do DB

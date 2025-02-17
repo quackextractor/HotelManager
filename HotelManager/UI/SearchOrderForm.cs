@@ -12,6 +12,7 @@ namespace HotelManager.UI
         public SearchOrderForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             cmbSearchType.SelectedIndex = 0;
             cmbSearchType.SelectedIndexChanged += CmbSearchType_SelectedIndexChanged;
             dtpSearchDate.Visible = false;

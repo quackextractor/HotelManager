@@ -11,6 +11,7 @@ namespace HotelManager.UI
         public MainWindow()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             objednavkaToolStripMenuItem.Enabled = false;
             loadConfigToolStripMenuItem.Enabled = false;
             this.Shown += MainWindow_Shown;

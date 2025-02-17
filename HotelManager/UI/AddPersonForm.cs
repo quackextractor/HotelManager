@@ -16,6 +16,7 @@ namespace HotelManager.UI
         public AddPersonForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             LoadStatusDropdown();
         }
 

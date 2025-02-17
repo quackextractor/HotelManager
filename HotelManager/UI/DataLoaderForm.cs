@@ -9,6 +9,7 @@ namespace HotelManager.UI
         public DataLoaderForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.AllowDrop = true;
             this.DragEnter += DataLoaderForm_DragEnter;
             this.DragDrop += DataLoaderForm_DragDrop;

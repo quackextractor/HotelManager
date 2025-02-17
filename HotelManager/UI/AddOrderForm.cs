@@ -11,6 +11,7 @@ namespace HotelManager.UI
         public AddOrderForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             LoadStatusDropdown();
             LoadRoomDropdown();
         }
