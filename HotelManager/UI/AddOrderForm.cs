@@ -68,82 +68,91 @@ namespace HotelManager.UI
         }
 
         private void btnSaveOrder_Click(object sender, EventArgs e)
+{
+    if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
+    {
+        MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.");
+        return;
+    }
+
+    if (dtpCheckinDate.Value.Date < DateTime.Today)
+    {
+        MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.");
+        return;
+    }
+
+    // Validate that the user has entered a role name
+    string orderRoleName = txtOrderRole.Text.Trim();
+    if (string.IsNullOrEmpty(orderRoleName))
+    {
+        MessageBox.Show("Zadejte prosím název role objednávky.");
+        return;
+    }
+
+    Order order = new Order
+    {
+        PricePerNight = double.Parse(txtPricePerNight.Text),
+        Nights = int.Parse(txtNights.Text),
+        OrderDate = DateTime.Now,
+        CheckinDate = dtpCheckinDate.Value,
+        Status = cmbStatus.SelectedItem.ToString(),
+        Paid = chkPaid.Checked
+    };
+
+    if (cmbRoom.SelectedItem != null)
+    {
+        ComboBoxItem selectedRoom = cmbRoom.SelectedItem as ComboBoxItem;
+        order.RoomId = selectedRoom.Value;
+    }
+
+    order.Persons = new System.Collections.Generic.List<Person>();
+    foreach (var item in lstPersons.Items)
+    {
+        if (item is Person person)
+            order.Persons.Add(person);
+    }
+
+    try
+    {
+        PersonDao personDao = new PersonDao();
+        OrderDao orderDao = new OrderDao();
+        OrderRoleDao orderRoleDao = new OrderRoleDao();
+
+        // First, save the order
+        orderDao.Insert(order);
+
+        foreach (Person person in order.Persons)
         {
-            if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
+            // Check if the person already exists in the database
+            Person existingPerson = personDao.GetByEmail(person.Email);
+            if (existingPerson != null)
             {
-                MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.");
-                return;
+                person.Id = existingPerson.Id; // Use existing ID
+            }
+            else
+            {
+                personDao.Insert(person); // Insert if not existing
             }
 
-            if (dtpCheckinDate.Value.Date < DateTime.Today)
+            // Now use the user-specified role name instead of "customer"
+            OrderRole role = new OrderRole
             {
-                MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.");
-                return;
-            }
-
-            Order order = new Order
-            {
-                PricePerNight = double.Parse(txtPricePerNight.Text),
-                Nights = int.Parse(txtNights.Text),
-                OrderDate = DateTime.Now,
-                CheckinDate = dtpCheckinDate.Value,
-                Status = cmbStatus.SelectedItem.ToString(),
-                Paid = chkPaid.Checked
+                OrderId = order.Id,
+                PersonId = person.Id,
+                Role = orderRoleName
             };
-
-            if (cmbRoom.SelectedItem != null)
-            {
-                ComboBoxItem selectedRoom = cmbRoom.SelectedItem as ComboBoxItem;
-                order.RoomId = selectedRoom.Value;
-            }
-
-            order.Persons = new System.Collections.Generic.List<Person>();
-            foreach (var item in lstPersons.Items)
-            {
-                if (item is Person person)
-                    order.Persons.Add(person);
-            }
-
-            try
-            {
-                PersonDao personDao = new PersonDao();
-                OrderDao orderDao = new OrderDao();
-                OrderRoleDao orderRoleDao = new OrderRoleDao();
-
-                // Nejprve uložení objednávky
-                orderDao.Insert(order);
-
-                foreach (Person person in order.Persons)
-                {
-                    // Zkontrolovat, zda osoba už existuje v databázi
-                    Person existingPerson = personDao.GetByEmail(person.Email);
-                    if (existingPerson != null)
-                    {
-                        person.Id = existingPerson.Id; // Použít existující ID místo insertu
-                    }
-                    else
-                    {
-                        personDao.Insert(person); // Pouze pokud osoba neexistuje
-                    }
-
-                    // Přidání role do objednávky
-                    OrderRole role = new OrderRole
-                    {
-                        OrderId = order.Id,
-                        PersonId = person.Id,
-                        Role = "customer"
-                    };
-                    orderRoleDao.Insert(role);
-                }
-
-                MessageBox.Show("Objednávka byla úspěšně přidána.");
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Chyba při přidávání objednávky: " + ex.Message);
-            }
+            orderRoleDao.Insert(role);
         }
+
+        MessageBox.Show("Objednávka byla úspěšně přidána.");
+        this.Close();
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Chyba při přidávání objednávky: " + ex.Message);
+    }
+}
+
 
         public class ComboBoxItem
         {
