@@ -14,6 +14,5 @@ namespace HotelManager.Domain
         
         // Navigation properties
         public List<Person> Persons { get; set; }
-        public List<Payment> Payments { get; set; }
     }
 }
