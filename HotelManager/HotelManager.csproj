@@ -26,9 +26,6 @@
       <Compile Update="UI\EditOrderForm.cs">
         <SubType>Form</SubType>
       </Compile>
-      <Compile Update="UI\ConfigLoaderForm.cs">
-        <SubType>Form</SubType>
-      </Compile>
       <Compile Update="UI\AddPersonForm.cs">
         <SubType>Form</SubType>
       </Compile>
