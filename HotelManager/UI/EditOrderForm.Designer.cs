@@ -14,6 +14,8 @@ namespace HotelManager.UI
         private System.Windows.Forms.CheckBox chkPaid;
         private System.Windows.Forms.Label lblRoom;
         private System.Windows.Forms.ComboBox cmbRoom;
+        private System.Windows.Forms.Label lblOrderRole;       // New label for OrderRole
+        private System.Windows.Forms.TextBox txtOrderRole;       // New textbox for OrderRole
         private System.Windows.Forms.Button btnAddPerson;
         private System.Windows.Forms.Button btnRemovePerson;
         private System.Windows.Forms.ListBox lstPersons;
@@ -35,6 +37,8 @@ namespace HotelManager.UI
             this.chkPaid = new System.Windows.Forms.CheckBox();
             this.lblRoom = new System.Windows.Forms.Label();
             this.cmbRoom = new System.Windows.Forms.ComboBox();
+            this.lblOrderRole = new System.Windows.Forms.Label();
+            this.txtOrderRole = new System.Windows.Forms.TextBox();
             this.btnAddPerson = new System.Windows.Forms.Button();
             this.btnRemovePerson = new System.Windows.Forms.Button();
             this.lstPersons = new System.Windows.Forms.ListBox();
@@ -133,22 +137,38 @@ namespace HotelManager.UI
             this.cmbRoom.Size = new System.Drawing.Size(121, 23);
             this.cmbRoom.TabIndex = 10;
             // 
+            // lblOrderRole
+            // 
+            this.lblOrderRole.AutoSize = true;
+            this.lblOrderRole.Location = new System.Drawing.Point(12, 220);
+            this.lblOrderRole.Name = "lblOrderRole";
+            this.lblOrderRole.Size = new System.Drawing.Size(95, 15);
+            this.lblOrderRole.TabIndex = 11;
+            this.lblOrderRole.Text = "Role objednávky:";
+            // 
+            // txtOrderRole
+            // 
+            this.txtOrderRole.Location = new System.Drawing.Point(120, 217);
+            this.txtOrderRole.Name = "txtOrderRole";
+            this.txtOrderRole.Size = new System.Drawing.Size(100, 23);
+            this.txtOrderRole.TabIndex = 12;
+            // 
             // btnAddPerson
             // 
-            this.btnAddPerson.Location = new System.Drawing.Point(12, 225);
+            this.btnAddPerson.Location = new System.Drawing.Point(12, 260);
             this.btnAddPerson.Name = "btnAddPerson";
             this.btnAddPerson.Size = new System.Drawing.Size(100, 23);
-            this.btnAddPerson.TabIndex = 11;
+            this.btnAddPerson.TabIndex = 13;
             this.btnAddPerson.Text = "Přidat osobu";
             this.btnAddPerson.UseVisualStyleBackColor = true;
             this.btnAddPerson.Click += new System.EventHandler(this.btnAddPerson_Click);
             // 
             // btnRemovePerson
             // 
-            this.btnRemovePerson.Location = new System.Drawing.Point(120, 225);
+            this.btnRemovePerson.Location = new System.Drawing.Point(120, 260);
             this.btnRemovePerson.Name = "btnRemovePerson";
             this.btnRemovePerson.Size = new System.Drawing.Size(100, 23);
-            this.btnRemovePerson.TabIndex = 12;
+            this.btnRemovePerson.TabIndex = 14;
             this.btnRemovePerson.Text = "Odebrat osobu";
             this.btnRemovePerson.UseVisualStyleBackColor = true;
             this.btnRemovePerson.Click += new System.EventHandler(this.btnRemovePerson_Click);
@@ -157,28 +177,30 @@ namespace HotelManager.UI
             // 
             this.lstPersons.FormattingEnabled = true;
             this.lstPersons.ItemHeight = 15;
-            this.lstPersons.Location = new System.Drawing.Point(12, 260);
+            this.lstPersons.Location = new System.Drawing.Point(12, 295);
             this.lstPersons.Name = "lstPersons";
             this.lstPersons.Size = new System.Drawing.Size(308, 94);
-            this.lstPersons.TabIndex = 13;
+            this.lstPersons.TabIndex = 15;
             // 
             // btnSaveChanges
             // 
-            this.btnSaveChanges.Location = new System.Drawing.Point(12, 370);
+            this.btnSaveChanges.Location = new System.Drawing.Point(12, 395);
             this.btnSaveChanges.Name = "btnSaveChanges";
             this.btnSaveChanges.Size = new System.Drawing.Size(100, 23);
-            this.btnSaveChanges.TabIndex = 14;
+            this.btnSaveChanges.TabIndex = 16;
             this.btnSaveChanges.Text = "Uložit změny";
             this.btnSaveChanges.UseVisualStyleBackColor = true;
             this.btnSaveChanges.Click += new System.EventHandler(this.btnSaveChanges_Click);
             // 
             // EditOrderForm
             // 
-            this.ClientSize = new System.Drawing.Size(332, 410);
+            this.ClientSize = new System.Drawing.Size(332, 430);
             this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.lstPersons);
             this.Controls.Add(this.btnRemovePerson);
             this.Controls.Add(this.btnAddPerson);
+            this.Controls.Add(this.txtOrderRole);
+            this.Controls.Add(this.lblOrderRole);
             this.Controls.Add(this.cmbRoom);
             this.Controls.Add(this.lblRoom);
             this.Controls.Add(this.chkPaid);
@@ -202,9 +224,7 @@ namespace HotelManager.UI
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

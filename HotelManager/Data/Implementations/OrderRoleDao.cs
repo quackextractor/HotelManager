@@ -127,4 +127,34 @@ public class OrderRoleDao : IOrderRoleDao
             connection.Close();
         }
     }
+
+    public IEnumerable<OrderRole> GetByOrderId(int orderId)
+    {
+        var roles = new List<OrderRole>();
+        var sql = "SELECT * FROM OrderRole WHERE order_id = @orderId";
+        using (var cmd = new SqlCommand(sql, connection))
+        {
+            cmd.Parameters.AddWithValue("@orderId", orderId);
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var orderRole = new OrderRole
+                    {
+                        Id = Convert.ToInt32(reader["id"]),
+                        PersonId = Convert.ToInt32(reader["person_id"]),
+                        OrderId = Convert.ToInt32(reader["order_id"]),
+                        Role = reader["role"].ToString()
+                    };
+                    roles.Add(orderRole);
+                }
+            }
+
+            connection.Close();
+        }
+
+        return roles;
+    }
 }

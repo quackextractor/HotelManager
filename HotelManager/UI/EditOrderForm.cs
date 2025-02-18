@@ -30,7 +30,8 @@ public partial class EditOrderForm : Form
         cmbRoom.Items.Clear();
         var roomDao = new RoomDao();
         var rooms = roomDao.GetAll();
-        foreach (var room in rooms) cmbRoom.Items.Add(new AddOrderForm.ComboBoxItem(room.RoomNumber, room.Id));
+        foreach (var room in rooms)
+            cmbRoom.Items.Add(new AddOrderForm.ComboBoxItem(room.RoomNumber, room.Id));
         if (cmbRoom.Items.Count > 0)
             cmbRoom.SelectedIndex = 0;
     }
@@ -58,6 +59,14 @@ public partial class EditOrderForm : Form
             if (order.Persons != null)
                 foreach (var person in order.Persons)
                     lstPersons.Items.Add(person);
+
+            // Load existing OrderRole name if available
+            var orderRoleDao = new OrderRoleDao();
+            var roles = orderRoleDao.GetByOrderId(order.Id);
+            if (roles != null && roles.Any())
+                txtOrderRole.Text = roles.First().Role;
+            else
+                txtOrderRole.Text = "customer";
         }
         else
         {
@@ -77,6 +86,14 @@ public partial class EditOrderForm : Form
         if (dtpCheckinDate.Value.Date < DateTime.Today)
         {
             MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.");
+            return;
+        }
+
+        // Validate that an OrderRole name has been entered
+        var orderRoleName = txtOrderRole.Text.Trim();
+        if (string.IsNullOrEmpty(orderRoleName))
+        {
+            MessageBox.Show("Zadejte prosím název role objednávky.");
             return;
         }
 
@@ -103,27 +120,27 @@ public partial class EditOrderForm : Form
             var orderDao = new OrderDao();
             var orderRoleDao = new OrderRoleDao();
 
-            // Aktualizace objednávky
+            // Update the order
             orderDao.Update(order);
 
-            // Nejprve odstranit staré role
+            // First, remove old roles
             orderRoleDao.DeleteByOrderId(order.Id);
 
             foreach (var person in order.Persons)
             {
-                // Zkontrolovat, zda osoba už existuje v databázi
+                // Check if the person already exists in the database
                 var existingPerson = personDao.GetByEmail(person.Email);
                 if (existingPerson != null)
-                    person.Id = existingPerson.Id; // Použít existující ID
+                    person.Id = existingPerson.Id; // Use existing ID
                 else
-                    personDao.Insert(person); // Pouze pokud neexistuje
+                    personDao.Insert(person);
 
-                // Přidání nové role
+                // Insert new OrderRole with the user-specified role name
                 var role = new OrderRole
                 {
                     OrderId = order.Id,
                     PersonId = person.Id,
-                    Role = "customer"
+                    Role = orderRoleName
                 };
                 orderRoleDao.Insert(role);
             }

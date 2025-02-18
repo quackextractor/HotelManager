@@ -18,7 +18,7 @@ public partial class SearchOrderForm : Form
     private void btnSearch_Click(object sender, EventArgs e)
     {
         var searchType = cmbSearchType.SelectedItem?.ToString() ?? string.Empty;
-        List<Order> orders = new List<Order>();
+        var orders = new List<Order>();
         var orderDao = new OrderDao();
 
         try
