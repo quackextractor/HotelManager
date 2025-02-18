@@ -63,7 +63,7 @@ namespace HotelManager.Data
         [XmlAttribute("RegistrationDate")]
         public DateTime RegistrationDate { get; set; }
 
-        [XmlAttribute("LastVisitDate")]
+        [XmlElement("LastVisitDate")]
         public DateTime? LastVisitDate { get; set; }
     }
 
