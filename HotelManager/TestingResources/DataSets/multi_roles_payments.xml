@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Tableset>
     <Rooms>
-        <Room RoomNumber="102" RoomType="Twin" Capacity="2" Price="110.00" />
-        <Room RoomNumber="202" RoomType="Single" Capacity="1" Price="75.00" />
-        <Room RoomNumber="VIP-1" RoomType="Presidential" Capacity="2" Price="500.00" />
+        <Room RoomNumber="102" RoomType="Twin" Capacity="2" Price="110.00"/>
+        <Room RoomNumber="202" RoomType="Single" Capacity="1" Price="75.00"/>
+        <Room RoomNumber="VIP-1" RoomType="Presidential" Capacity="2" Price="500.00"/>
     </Rooms>
     <Persons>
         <Person FirstName="Emma" LastName="Brown" Email="emma@example.com"
-                Status="VIP" RegistrationDate="2023-03-20" LastVisitDate="2023-09-25" />
+                Status="VIP" RegistrationDate="2023-03-20" LastVisitDate="2023-09-25"/>
         <Person FirstName="David" LastName="Wilson" Email="david@example.com"
-                Status="Active" RegistrationDate="2023-05-10" />
+                Status="Active" RegistrationDate="2023-05-10"/>
         <Person FirstName="Sophia" LastName="Lee" Email="sophia@agency.com"
-                Status="Partner" RegistrationDate="2022-11-01" />
+                Status="Partner" RegistrationDate="2022-11-01"/>
     </Persons>
     <Orders>
         <Order XmlId="ORD-VIP1" RoomNumber="VIP-1" PricePerNight="500.00" Nights="5"
-               OrderDate="2025-11-15" CheckinDate="2025-11-20" Status="Confirmed" Paid="true" />
+               OrderDate="2025-11-15" CheckinDate="2025-11-20" Status="Confirmed" Paid="true"/>
         <Order XmlId="ORD-102" RoomNumber="102" PricePerNight="110.00" Nights="3"
-               OrderDate="2025-11-16" CheckinDate="2025-11-19" Status="Completed" Paid="true" />
+               OrderDate="2025-11-16" CheckinDate="2025-11-19" Status="Completed" Paid="true"/>
     </Orders>
     <OrderRoles>
-        <OrderRole OrderXmlId="ORD-VIP1" PersonEmail="emma@example.com" Role="Guest" />
-        <OrderRole OrderXmlId="ORD-VIP1" PersonEmail="sophia@agency.com" Role="Agent" />
-        <OrderRole OrderXmlId="ORD-102" PersonEmail="david@example.com" Role="Customer" />
+        <OrderRole OrderXmlId="ORD-VIP1" PersonEmail="emma@example.com" Role="Guest"/>
+        <OrderRole OrderXmlId="ORD-VIP1" PersonEmail="sophia@agency.com" Role="Agent"/>
+        <OrderRole OrderXmlId="ORD-102" PersonEmail="david@example.com" Role="Customer"/>
     </OrderRoles>
     <Payments>
         <Payment OrderXmlId="ORD-VIP1" Amount="2500.00" PaymentDate="2025-11-15"
-                 PaymentMethod="CreditCard" Note="Full payment" />
+                 PaymentMethod="CreditCard" Note="Full payment"/>
         <Payment OrderXmlId="ORD-102" Amount="330.00" PaymentDate="2025-11-16"
-                 PaymentMethod="Cash" />
+                 PaymentMethod="Cash"/>
     </Payments>
 </Tableset>

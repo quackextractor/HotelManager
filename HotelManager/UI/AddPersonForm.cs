@@ -1,72 +1,70 @@
-using System;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using HotelManager.Data.Implementations;
 using HotelManager.Domain;
-using System.ComponentModel;
 
-namespace HotelManager.UI
+namespace HotelManager.UI;
+
+public partial class AddPersonForm : Form
 {
-    public partial class AddPersonForm : Form
+    public AddPersonForm()
     {
-        // Po úspěšném uložení bude tato vlastnost obsahovat nově vytvořenou osobu
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Person Person { get; private set; }
+        InitializeComponent();
+        FormBorderStyle = FormBorderStyle.FixedSingle;
+        LoadStatusDropdown();
+        MaximizeBox = false;
+    }
 
-        public AddPersonForm()
+    // Po úspěšném uložení bude tato vlastnost obsahovat nově vytvořenou osobu
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Person Person { get; private set; }
+
+    private void LoadStatusDropdown()
+    {
+        cmbStatus.Items.Clear();
+        cmbStatus.Items.Add("active");
+        cmbStatus.Items.Add("inactive");
+        cmbStatus.SelectedIndex = 0;
+    }
+
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+        // Validace emailu pomocí regulárního výrazu
+        if (!Regex.IsMatch(txtEmail.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
-            InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            LoadStatusDropdown();
+            MessageBox.Show("Zadejte platnou emailovou adresu.");
+            return;
         }
 
-        private void LoadStatusDropdown()
+        // Vytvoříme instanci třídy Person a naplníme ji daty z formuláře
+        Person = new Person
         {
-            cmbStatus.Items.Clear();
-            cmbStatus.Items.Add("active");
-            cmbStatus.Items.Add("inactive");
-            cmbStatus.SelectedIndex = 0;
-        }
+            FirstName = txtFirstName.Text.Trim(),
+            LastName = txtLastName.Text.Trim(),
+            Email = txtEmail.Text.Trim(),
+            Phone = txtPhone.Text.Trim(),
+            Status = cmbStatus.SelectedItem.ToString(),
+            RegistrationDate = DateTime.Now
+        };
 
-        private void btnSave_Click(object sender, EventArgs e)
+        try
         {
-            // Validace emailu pomocí regulárního výrazu
-            if (!Regex.IsMatch(txtEmail.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            {
-                MessageBox.Show("Zadejte platnou emailovou adresu.");
-                return;
-            }
-
-            // Vytvoříme instanci třídy Person a naplníme ji daty z formuláře
-            Person = new Person
-            {
-                FirstName = txtFirstName.Text.Trim(),
-                LastName = txtLastName.Text.Trim(),
-                Email = txtEmail.Text.Trim(),
-                Phone = txtPhone.Text.Trim(),
-                Status = cmbStatus.SelectedItem.ToString(),
-                RegistrationDate = DateTime.Now
-            };
-
-            try
-            {
-                // Uložíme osobu do DB pomocí DAO
-                PersonDao personDao = new PersonDao();
-                personDao.Insert(Person);
-                MessageBox.Show("Osoba byla úspěšně uložena.");
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Chyba při ukládání osoby: " + ex.Message);
-            }
+            // Uložíme osobu do DB pomocí DAO
+            var personDao = new PersonDao();
+            personDao.Insert(Person);
+            MessageBox.Show("Osoba byla úspěšně uložena.");
+            DialogResult = DialogResult.OK;
+            Close();
         }
-
-        private void btnCancel_Click(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            MessageBox.Show("Chyba při ukládání osoby: " + ex.Message);
         }
+    }
+
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+        DialogResult = DialogResult.Cancel;
+        Close();
     }
 }

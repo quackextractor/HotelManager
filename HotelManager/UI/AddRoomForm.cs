@@ -8,7 +8,8 @@ public partial class AddRoomForm : Form
     public AddRoomForm()
     {
         InitializeComponent();
-        this.FormBorderStyle = FormBorderStyle.FixedSingle;
+        FormBorderStyle = FormBorderStyle.FixedSingle;
+        MaximizeBox = false;
     }
 
     // Uloží novou místnost do DB
@@ -16,14 +17,14 @@ public partial class AddRoomForm : Form
     {
         if (string.IsNullOrWhiteSpace(txtRoomNumber.Text) ||
             string.IsNullOrWhiteSpace(txtRoomType.Text) ||
-            !int.TryParse(txtCapacity.Text, out int capacity) ||
-            !double.TryParse(txtPrice.Text, out double price))
+            !int.TryParse(txtCapacity.Text, out var capacity) ||
+            !double.TryParse(txtPrice.Text, out var price))
         {
             MessageBox.Show("Zkontrolujte prosím vyplnění všech údajů.");
             return;
         }
 
-        Room room = new Room
+        var room = new Room
         {
             RoomNumber = txtRoomNumber.Text.Trim(),
             RoomType = txtRoomType.Text.Trim(),
@@ -33,11 +34,11 @@ public partial class AddRoomForm : Form
 
         try
         {
-            RoomDao roomDao = new RoomDao();
+            var roomDao = new RoomDao();
             roomDao.Insert(room);
             MessageBox.Show("Místnost byla úspěšně přidána.");
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
         catch (Exception ex)
         {
@@ -47,7 +48,7 @@ public partial class AddRoomForm : Form
 
     private void btnCancel_Click(object sender, EventArgs e)
     {
-        this.DialogResult = DialogResult.Cancel;
-        this.Close();
+        DialogResult = DialogResult.Cancel;
+        Close();
     }
 }

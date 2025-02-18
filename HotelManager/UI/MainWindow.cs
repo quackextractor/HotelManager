@@ -1,125 +1,116 @@
-using System;
-using System.Windows.Forms;
 using HotelManager.Data.Utility;
 
-namespace HotelManager.UI
+namespace HotelManager.UI;
+
+public partial class MainWindow : Form
 {
-    public partial class MainWindow : Form
+    private bool _isConnectionValid;
+
+    public MainWindow()
     {
-        private bool _isConnectionValid;
+        InitializeComponent();
+        FormBorderStyle = FormBorderStyle.FixedSingle;
+        objednavkaToolStripMenuItem.Enabled = false;
+        loadConfigToolStripMenuItem.Enabled = false;
+        MaximizeBox = false;
+        Shown += MainWindow_Shown;
+    }
 
-        public MainWindow()
-        {
-            InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            objednavkaToolStripMenuItem.Enabled = false;
-            loadConfigToolStripMenuItem.Enabled = false;
-            this.Shown += MainWindow_Shown;
-        }
 
-        
-        private async void MainWindow_Shown(object? sender, EventArgs e)
-        {
-            await CheckConnectionAndUpdateUIAsync();
-        }
-        
-        private async Task CheckConnectionAndUpdateUIAsync()
-        {
-            ShowLoadingPanel();
-            await VerifyDatabaseConnectionAsync();
-            UpdateMenuState();
-            HideLoadingPanel();
+    private async void MainWindow_Shown(object? sender, EventArgs e)
+    {
+        await CheckConnectionAndUpdateUIAsync();
+    }
 
-            if (!_isConnectionValid)
-            {
-                ShowErrorPanel();
-            }
-            else
-            {
-                errorPanel.Visible = false;
-            }
-        }
+    private async Task CheckConnectionAndUpdateUIAsync()
+    {
+        ShowLoadingPanel();
+        await VerifyDatabaseConnectionAsync();
+        UpdateMenuState();
+        HideLoadingPanel();
 
-        private async Task VerifyDatabaseConnectionAsync()
-        {
-            try
-            {
-                var connection = SqlConnectionSingleton.Instance.Connection;
-                await connection.OpenAsync();
-                connection.Close();
-                _isConnectionValid = true;
-            }
-            catch (Exception ex)
-            {
-                _isConnectionValid = false;
-                MessageBox.Show($"Database connection error: {ex.Message}\nPlease configure the connection.",
-                    "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        
-        private void UpdateMenuState()
-        {
-            objednavkaToolStripMenuItem.Enabled = _isConnectionValid;
-            loadConfigToolStripMenuItem.Enabled = _isConnectionValid;
-        }
+        if (!_isConnectionValid)
+            ShowErrorPanel();
+        else
+            errorPanel.Visible = false;
+    }
 
-        private void ShowLoadingPanel()
+    private async Task VerifyDatabaseConnectionAsync()
+    {
+        try
         {
-            loadingPanel.Visible = true;
-            loadingPanel.BringToFront();
-            Application.DoEvents();
+            var connection = SqlConnectionSingleton.Instance.Connection;
+            await connection.OpenAsync();
+            connection.Close();
+            _isConnectionValid = true;
         }
+        catch (Exception ex)
+        {
+            _isConnectionValid = false;
+            MessageBox.Show($"Database connection error: {ex.Message}\nPlease configure the connection.",
+                "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
 
-        private void HideLoadingPanel()
-        {
-            loadingPanel.Visible = false;
-        }
+    private void UpdateMenuState()
+    {
+        objednavkaToolStripMenuItem.Enabled = _isConnectionValid;
+        loadConfigToolStripMenuItem.Enabled = _isConnectionValid;
+    }
 
-        private void ShowErrorPanel()
-        {
-            errorPanel.Visible = true;
-            errorPanel.BringToFront();
-        }
+    private void ShowLoadingPanel()
+    {
+        loadingPanel.Visible = true;
+        loadingPanel.BringToFront();
+        Application.DoEvents();
+    }
 
-        private async void retryButton_Click(object sender, EventArgs e)
-        {
-            await CheckConnectionAndUpdateUIAsync();
-        }
+    private void HideLoadingPanel()
+    {
+        loadingPanel.Visible = false;
+    }
 
-        private async void loadDataToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (DataLoaderForm dataLoaderForm = new DataLoaderForm())
-            {
-                if (dataLoaderForm.ShowDialog() == DialogResult.OK)
-                {
-                    await CheckConnectionAndUpdateUIAsync();
-                }
-            }
-        }
-        
-        private void addOrderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (AddOrderForm addOrderForm = new AddOrderForm())
-            {
-                addOrderForm.ShowDialog();
-            }
-        }
+    private void ShowErrorPanel()
+    {
+        errorPanel.Visible = true;
+        errorPanel.BringToFront();
+    }
 
-        private void editOrderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int orderId = 1;
-            using (EditOrderForm editOrderForm = new EditOrderForm(orderId))
-            {
-                editOrderForm.ShowDialog();
-            }
-        }
+    private async void retryButton_Click(object sender, EventArgs e)
+    {
+        await CheckConnectionAndUpdateUIAsync();
+    }
 
-        private void searchOrderToolStripMenuItem_Click(object sender, EventArgs e)
+    private async void loadDataToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using (var dataLoaderForm = new DataLoaderForm())
         {
-            using (SearchOrderForm searchOrderForm = new SearchOrderForm())
-            {
-                searchOrderForm.ShowDialog();
-            }
+            if (dataLoaderForm.ShowDialog() == DialogResult.OK) await CheckConnectionAndUpdateUIAsync();
+        }
+    }
+
+    private void addOrderToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using (var addOrderForm = new AddOrderForm())
+        {
+            addOrderForm.ShowDialog();
+        }
+    }
+
+    private void editOrderToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var orderId = 1;
+        using (var editOrderForm = new EditOrderForm(orderId))
+        {
+            editOrderForm.ShowDialog();
+        }
+    }
+
+    private void searchOrderToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using (var searchOrderForm = new SearchOrderForm())
+        {
+            searchOrderForm.ShowDialog();
         }
     }
 }

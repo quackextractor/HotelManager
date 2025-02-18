@@ -46,7 +46,7 @@ public class PaymentDao : IPaymentDao
 
     public IEnumerable<Payment> GetAll()
     {
-        List<Payment> payments = new List<Payment>();
+        var payments = new List<Payment>();
         var sql = "SELECT * FROM Payment";
         using (var cmd = new SqlCommand(sql, connection))
         {

@@ -45,7 +45,7 @@ public class RoomDao : IRoomDao
 
     public IEnumerable<Room> GetAll()
     {
-        List<Room> rooms = new List<Room>();
+        var rooms = new List<Room>();
         var sql = "SELECT * FROM Room";
         using (var cmd = new SqlCommand(sql, connection))
         {
@@ -86,11 +86,8 @@ public class RoomDao : IRoomDao
             cmd.Parameters.AddWithValue("@price", room.Price);
             if (connection.State != ConnectionState.Open)
                 connection.Open();
-            object result = cmd.ExecuteScalar();
-            if (result != null)
-            {
-                room.Id = Convert.ToInt32(result);
-            }
+            var result = cmd.ExecuteScalar();
+            if (result != null) room.Id = Convert.ToInt32(result);
             connection.Close();
         }
     }

@@ -44,7 +44,7 @@ public class OrderRoleDao : IOrderRoleDao
 
     public IEnumerable<OrderRole> GetAll()
     {
-        List<OrderRole> roles = new List<OrderRole>();
+        var roles = new List<OrderRole>();
         var sql = "SELECT * FROM OrderRole";
         using (var cmd = new SqlCommand(sql, connection))
         {
