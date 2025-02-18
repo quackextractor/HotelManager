@@ -76,10 +76,23 @@ public partial class SearchOrderForm : Form
         {
             var selectedOrder = dgvOrders.Rows[e.RowIndex].DataBoundItem as Order;
             if (selectedOrder != null)
-                using (var editForm = new EditOrderForm(selectedOrder.Id))
+            {
+                // Create DAO instances and inject them
+                var roomDao = new RoomDao();
+                var personDao = new PersonDao();
+                var orderDao = new OrderDao();
+                var orderRoleDao = new OrderRoleDao();
+            
+                using (var editForm = new EditOrderForm(
+                           selectedOrder.Id, 
+                           roomDao, 
+                           personDao, 
+                           orderDao, 
+                           orderRoleDao))
                 {
                     editForm.ShowDialog();
                 }
+            }
         }
     }
 }

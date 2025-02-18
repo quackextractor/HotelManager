@@ -12,4 +12,5 @@ public interface IOrderDao
     IEnumerable<Order> SearchByOrderNumber(string orderNumber);
     IEnumerable<Order> SearchByPersonName(string personName);
     IEnumerable<Order> SearchByDate(DateTime date);
+    IEnumerable<Order> SearchByRoomNumber(string roomNumber);
 }
