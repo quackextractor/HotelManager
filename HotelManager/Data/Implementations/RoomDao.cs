@@ -75,8 +75,9 @@ public class RoomDao : IRoomDao
 
     public void Insert(Room room)
     {
-        var sql =
-            "INSERT INTO Room (room_number, room_type, capacity, price) VALUES (@room_number, @room_type, @capacity, @price)";
+        var sql = @"INSERT INTO Room (room_number, room_type, capacity, price) 
+                VALUES (@room_number, @room_type, @capacity, @price);
+                SELECT SCOPE_IDENTITY();";
         using (var cmd = new SqlCommand(sql, connection))
         {
             cmd.Parameters.AddWithValue("@room_number", room.RoomNumber);
@@ -85,7 +86,11 @@ public class RoomDao : IRoomDao
             cmd.Parameters.AddWithValue("@price", room.Price);
             if (connection.State != ConnectionState.Open)
                 connection.Open();
-            cmd.ExecuteNonQuery();
+            object result = cmd.ExecuteScalar();
+            if (result != null)
+            {
+                room.Id = Convert.ToInt32(result);
+            }
             connection.Close();
         }
     }
