@@ -7,6 +7,7 @@ namespace HotelManager.UI;
 public partial class EditOrderForm : Form
 {
     private Order order;
+    private bool _orderNotFound = false;
 
     public EditOrderForm(int orderId)
     {
@@ -16,6 +17,22 @@ public partial class EditOrderForm : Form
         LoadRoomDropdown();
         LoadOrder(orderId);
         MaximizeBox = false;
+
+        // Delay error handling until after the form is displayed.
+        this.Shown += EditOrderForm_Shown;
+    }
+
+    // This event fires after the form is displayed.
+    private void EditOrderForm_Shown(object sender, EventArgs e)
+    {
+        if (_orderNotFound)
+        {
+            MessageBox.Show("Objednávka nebyla nalezena.", "Chyba", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+            // Optionally set a DialogResult so the calling code can react.
+            this.DialogResult = DialogResult.Cancel;
+            Close();
+        }
     }
 
     private void LoadStatusDropdown()
@@ -48,30 +65,32 @@ public partial class EditOrderForm : Form
             cmbStatus.SelectedItem = order.Status;
             chkPaid.Checked = order.Paid;
             if (order.RoomId.HasValue)
+            {
                 foreach (AddOrderForm.ComboBoxItem item in cmbRoom.Items)
+                {
                     if (item.Value == order.RoomId.Value)
                     {
                         cmbRoom.SelectedItem = item;
                         break;
                     }
+                }
+            }
 
             lstPersons.Items.Clear();
             if (order.Persons != null)
+            {
                 foreach (var person in order.Persons)
                     lstPersons.Items.Add(person);
+            }
 
-            // Load existing OrderRole name if available
             var orderRoleDao = new OrderRoleDao();
             var roles = orderRoleDao.GetByOrderId(order.Id);
-            if (roles != null && roles.Any())
-                txtOrderRole.Text = roles.First().Role;
-            else
-                txtOrderRole.Text = "customer";
+            txtOrderRole.Text = (roles != null && roles.Any()) ? roles.First().Role : "customer";
         }
         else
         {
-            MessageBox.Show("Objednávka nebyla nalezena.");
-            Close();
+            // Mark the error so that the Shown event can handle it.
+            _orderNotFound = true;
         }
     }
 
@@ -89,7 +108,6 @@ public partial class EditOrderForm : Form
             return;
         }
 
-        // Validate that an OrderRole name has been entered
         var orderRoleName = txtOrderRole.Text.Trim();
         if (string.IsNullOrEmpty(orderRoleName))
         {
@@ -97,6 +115,7 @@ public partial class EditOrderForm : Form
             return;
         }
 
+        // Update order fields.
         order.PricePerNight = double.Parse(txtPricePerNight.Text);
         order.Nights = int.Parse(txtNights.Text);
         order.CheckinDate = dtpCheckinDate.Value;
@@ -111,8 +130,10 @@ public partial class EditOrderForm : Form
 
         order.Persons = new List<Person>();
         foreach (var item in lstPersons.Items)
+        {
             if (item is Person person)
                 order.Persons.Add(person);
+        }
 
         try
         {
@@ -120,22 +141,20 @@ public partial class EditOrderForm : Form
             var orderDao = new OrderDao();
             var orderRoleDao = new OrderRoleDao();
 
-            // Update the order
+            // Update the order.
             orderDao.Update(order);
 
-            // First, remove old roles
+            // Remove old roles.
             orderRoleDao.DeleteByOrderId(order.Id);
 
             foreach (var person in order.Persons)
             {
-                // Check if the person already exists in the database
                 var existingPerson = personDao.GetByEmail(person.Email);
                 if (existingPerson != null)
-                    person.Id = existingPerson.Id; // Use existing ID
+                    person.Id = existingPerson.Id;
                 else
                     personDao.Insert(person);
 
-                // Insert new OrderRole with the user-specified role name
                 var role = new OrderRole
                 {
                     OrderId = order.Id,
@@ -171,8 +190,7 @@ public partial class EditOrderForm : Form
         if (lstPersons.SelectedIndex >= 0)
             lstPersons.Items.RemoveAt(lstPersons.SelectedIndex);
     }
-    
-    // New event handler for the Delete button
+
     private void btnDelete_Click(object sender, EventArgs e)
     {
         var confirmation = MessageBox.Show("Opravdu chcete smazat tuto objednávku?", 
