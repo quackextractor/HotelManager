@@ -16,7 +16,6 @@ public partial class MainWindow : Form
         Shown += MainWindow_Shown;
     }
 
-
     private async void MainWindow_Shown(object? sender, EventArgs e)
     {
         await CheckConnectionAndUpdateUIAsync();
@@ -94,15 +93,6 @@ public partial class MainWindow : Form
         using (var addOrderForm = new AddOrderForm())
         {
             addOrderForm.ShowDialog();
-        }
-    }
-
-    private void editOrderToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        var orderId = 1;
-        using (var editOrderForm = new EditOrderForm(orderId))
-        {
-            editOrderForm.ShowDialog();
         }
     }
 

@@ -6,7 +6,6 @@ namespace HotelManager.UI
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem objednavkaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addOrderToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageTypesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadConfigToolStripMenuItem;
@@ -22,7 +21,6 @@ namespace HotelManager.UI
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.objednavkaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadingPanel = new System.Windows.Forms.Panel();
@@ -49,7 +47,6 @@ namespace HotelManager.UI
             // 
             this.objednavkaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addOrderToolStripMenuItem,
-            this.editOrderToolStripMenuItem,
             this.searchOrderToolStripMenuItem});
             this.objednavkaToolStripMenuItem.Name = "objednavkaToolStripMenuItem";
             this.objednavkaToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
@@ -61,13 +58,6 @@ namespace HotelManager.UI
             this.addOrderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.addOrderToolStripMenuItem.Text = "Přidat objednávku";
             this.addOrderToolStripMenuItem.Click += new System.EventHandler(this.addOrderToolStripMenuItem_Click);
-            // 
-            // editOrderToolStripMenuItem
-            // 
-            this.editOrderToolStripMenuItem.Name = "editOrderToolStripMenuItem";
-            this.editOrderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.editOrderToolStripMenuItem.Text = "Upravit objednávku";
-            this.editOrderToolStripMenuItem.Click += new System.EventHandler(this.editOrderToolStripMenuItem_Click);
             // 
             // searchOrderToolStripMenuItem
             // 
