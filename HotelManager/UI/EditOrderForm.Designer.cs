@@ -14,12 +14,13 @@ namespace HotelManager.UI
         private System.Windows.Forms.CheckBox chkPaid;
         private System.Windows.Forms.Label lblRoom;
         private System.Windows.Forms.ComboBox cmbRoom;
-        private System.Windows.Forms.Label lblOrderRole;       // New label for OrderRole
-        private System.Windows.Forms.TextBox txtOrderRole;       // New textbox for OrderRole
+        private System.Windows.Forms.Label lblOrderRole;
+        private System.Windows.Forms.TextBox txtOrderRole;
         private System.Windows.Forms.Button btnAddPerson;
         private System.Windows.Forms.Button btnRemovePerson;
         private System.Windows.Forms.ListBox lstPersons;
         private System.Windows.Forms.Button btnSaveChanges;
+        private System.Windows.Forms.Button btnDelete;
 
         /// <summary>
         /// Metoda pro inicializaci ovládacích prvků
@@ -43,6 +44,7 @@ namespace HotelManager.UI
             this.btnRemovePerson = new System.Windows.Forms.Button();
             this.lstPersons = new System.Windows.Forms.ListBox();
             this.btnSaveChanges = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblPricePerNight
@@ -192,9 +194,20 @@ namespace HotelManager.UI
             this.btnSaveChanges.UseVisualStyleBackColor = true;
             this.btnSaveChanges.Click += new System.EventHandler(this.btnSaveChanges_Click);
             // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(220, 395);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(100, 23);
+            this.btnDelete.TabIndex = 17;
+            this.btnDelete.Text = "Smazat objednávku";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // EditOrderForm
             // 
             this.ClientSize = new System.Drawing.Size(332, 430);
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.lstPersons);
             this.Controls.Add(this.btnRemovePerson);

@@ -171,4 +171,27 @@ public partial class EditOrderForm : Form
         if (lstPersons.SelectedIndex >= 0)
             lstPersons.Items.RemoveAt(lstPersons.SelectedIndex);
     }
+    
+    // New event handler for the Delete button
+    private void btnDelete_Click(object sender, EventArgs e)
+    {
+        var confirmation = MessageBox.Show("Opravdu chcete smazat tuto objednávku?", 
+                                             "Potvrzení smazání", 
+                                             MessageBoxButtons.YesNo, 
+                                             MessageBoxIcon.Question);
+        if (confirmation == DialogResult.Yes)
+        {
+            try
+            {
+                var orderDao = new OrderDao();
+                orderDao.Delete(order.Id);
+                MessageBox.Show("Objednávka byla úspěšně smazána.");
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba při mazání objednávky: " + ex.Message);
+            }
+        }
+    }
 }
