@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tableset>
+    <Rooms>
+        <Room RoomNumber="201" RoomType="Single" Capacity="1" Price="80.00" />
+        <Room RoomNumber="301" RoomType="Suite" Capacity="4" Price="250.00" />
+    </Rooms>
+    <Persons>
+        <Person FirstName="Alice" LastName="Smith" Email="alice@example.com" Phone="+420123456789"
+                Status="Active" RegistrationDate="2023-02-15" />
+        <Person FirstName="Bob" LastName="Johnson" Email="bob@travel.com" Status="Partner"
+                RegistrationDate="2022-12-01" LastVisitDate="2023-09-30" />
+    </Persons>
+    <Orders>
+        <Order XmlId="ORD-202" RoomNumber="301" PricePerNight="250.00" Nights="2"
+               OrderDate="2023-10-10" CheckinDate="2023-10-12" Status="Pending" Paid="false" />
+    </Orders>
+    <OrderRoles>
+        <OrderRole OrderXmlId="ORD-202" PersonEmail="alice@example.com" Role="Customer" />
+        <OrderRole OrderXmlId="ORD-202" PersonEmail="bob@travel.com" Role="TravelAgent" />
+    </OrderRoles>
+    <Payments>
+        <Payment OrderXmlId="ORD-202" Amount="100.00" PaymentDate="2023-10-10"
+                 PaymentMethod="BankTransfer" Note="Deposit" />
+        <Payment OrderXmlId="ORD-202" Amount="400.00" PaymentDate="2023-10-11"
+                 PaymentMethod="Cash" Note="Balance payment" />
+    </Payments>
+</Tableset>

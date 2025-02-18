@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tableset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Rooms>
+        <Room RoomNumber="101" RoomType="Double" Capacity="2" Price="120.50" />
+    </Rooms>
+    <Persons>
+        <Person FirstName="John" LastName="Doe" Email="john@example.com" Status="Active"
+                RegistrationDate="2023-01-01" LastVisitDate="2023-10-01" />
+    </Persons>
+    <Orders>
+        <Order XmlId="ORD-001" RoomNumber="101" PricePerNight="120.50" Nights="3"
+               OrderDate="2023-10-01" CheckinDate="2023-10-05" Status="Confirmed" Paid="true" />
+    </Orders>
+    <OrderRoles>
+        <OrderRole OrderXmlId="ORD-001" PersonEmail="john@example.com" Role="Customer" />
+    </OrderRoles>
+    <Payments>
+        <Payment OrderXmlId="ORD-001" Amount="361.50" PaymentDate="2023-10-01"
+                 PaymentMethod="CreditCard" Note="Paid in full" />
+    </Payments>
+</Tableset>
