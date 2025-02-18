@@ -95,27 +95,39 @@ public partial class EditOrderForm : Form
     }
 
     private void btnSaveChanges_Click(object sender, EventArgs e)
+{
+    if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
     {
-        if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
-        {
-            MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.");
-            return;
-        }
+        MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.", 
+                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return;
+    }
 
-        if (dtpCheckinDate.Value.Date < DateTime.Today)
-        {
-            MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.");
-            return;
-        }
+    if (dtpCheckinDate.Value.Date < DateTime.Today)
+    {
+        MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.", 
+                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return;
+    }
 
-        var orderRoleName = txtOrderRole.Text.Trim();
-        if (string.IsNullOrEmpty(orderRoleName))
-        {
-            MessageBox.Show("Zadejte prosím název role objednávky.");
-            return;
-        }
+    var orderRoleName = txtOrderRole.Text.Trim();
+    if (string.IsNullOrEmpty(orderRoleName))
+    {
+        MessageBox.Show("Zadejte prosím název role objednávky.", 
+                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return;
+    }
+    
+    if (cmbStatus.SelectedItem == null)
+    {
+        MessageBox.Show("Vyberte prosím status objednávky z dropdown nabídky.", 
+                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return;
+    }
 
-        // Update order fields.
+    try
+    {
+        // Aktualizace vlastností objednávky.
         order.PricePerNight = double.Parse(txtPricePerNight.Text);
         order.Nights = int.Parse(txtNights.Text);
         order.CheckinDate = dtpCheckinDate.Value;
@@ -135,43 +147,42 @@ public partial class EditOrderForm : Form
                 order.Persons.Add(person);
         }
 
-        try
+        var personDao = new PersonDao();
+        var orderDao = new OrderDao();
+        var orderRoleDao = new OrderRoleDao();
+
+        // Aktualizace objednávky.
+        orderDao.Update(order);
+
+        // Smazání starých rolí.
+        orderRoleDao.DeleteByOrderId(order.Id);
+
+        foreach (var person in order.Persons)
         {
-            var personDao = new PersonDao();
-            var orderDao = new OrderDao();
-            var orderRoleDao = new OrderRoleDao();
+            var existingPerson = personDao.GetByEmail(person.Email);
+            if (existingPerson != null)
+                person.Id = existingPerson.Id;
+            else
+                personDao.Insert(person);
 
-            // Update the order.
-            orderDao.Update(order);
-
-            // Remove old roles.
-            orderRoleDao.DeleteByOrderId(order.Id);
-
-            foreach (var person in order.Persons)
+            var role = new OrderRole
             {
-                var existingPerson = personDao.GetByEmail(person.Email);
-                if (existingPerson != null)
-                    person.Id = existingPerson.Id;
-                else
-                    personDao.Insert(person);
-
-                var role = new OrderRole
-                {
-                    OrderId = order.Id,
-                    PersonId = person.Id,
-                    Role = orderRoleName
-                };
-                orderRoleDao.Insert(role);
-            }
-
-            MessageBox.Show("Objednávka byla úspěšně upravena.");
-            Close();
+                OrderId = order.Id,
+                PersonId = person.Id,
+                Role = orderRoleName
+            };
+            orderRoleDao.Insert(role);
         }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Chyba při úpravě objednávky: " + ex.Message);
-        }
+
+        MessageBox.Show("Objednávka byla úspěšně upravena.");
+        Close();
     }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Chyba při úpravě objednávky: " + ex.Message, 
+                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+}
 
     private void btnAddPerson_Click(object sender, EventArgs e)
     {
