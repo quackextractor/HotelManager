@@ -1,3 +1,9 @@
+create database HotelDB
+go
+
+use HotelDB
+go
+
 create table Person
 (
     id                int identity
