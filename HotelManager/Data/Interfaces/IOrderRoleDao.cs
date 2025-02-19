@@ -9,6 +9,4 @@ public interface IOrderRoleDao
     void Insert(OrderRole orderRole);
     void Update(OrderRole orderRole);
     void Delete(int id);
-    void DeleteByOrderId(int orderId);
-    IEnumerable<OrderRole> GetByOrderId(int orderId);
 }

@@ -1,4 +1,3 @@
-using HotelManager.Data.Implementations;
 using HotelManager.Data.Utility;
 
 namespace HotelManager.UI;
@@ -91,12 +90,7 @@ public partial class MainWindow : Form
 
     private void addOrderToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        var roomDao = new RoomDao();
-        var personDao = new PersonDao();
-        var orderDao = new OrderDao();
-        var orderRoleDao = new OrderRoleDao();
-    
-        using (var addOrderForm = new AddOrderForm(roomDao, personDao, orderDao, orderRoleDao))
+        using (var addOrderForm = new AddOrderForm())
         {
             addOrderForm.ShowDialog();
         }

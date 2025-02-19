@@ -10,5 +10,4 @@ public interface IPersonDao
     void Update(Person person);
     void Delete(int id);
     IEnumerable<Person> SearchByName(string name);
-    Person GetByEmail(string personEmail);
 }
