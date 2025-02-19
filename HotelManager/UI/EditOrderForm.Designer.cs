@@ -23,7 +23,8 @@ namespace HotelManager.UI
         private System.Windows.Forms.Button btnDelete;
 
         /// <summary>
-        /// Metoda pro inicializaci ovládacích prvků
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -232,7 +233,7 @@ namespace HotelManager.UI
         }
 
         /// <summary>
-        /// Uvolnění prostředků.
+        /// Clean up any resources being used.
         /// </summary>
         protected override void Dispose(bool disposing)
         {

@@ -7,11 +7,11 @@ partial class MainWindow
 /// </summary>
 private System.ComponentModel.IContainer components = null;
 
-    // Loading panel (remains unchanged)
+    // Loading panel
     private System.Windows.Forms.Panel loadingPanel;
     private System.Windows.Forms.Label loadingLabel;
 
-    // New panel to hold central buttons
+    // Panel to hold central buttons
     private System.Windows.Forms.Panel panelButtons;
     private System.Windows.Forms.Button buttonNewOrder;
     private System.Windows.Forms.Button buttonSearchOrder;

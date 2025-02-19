@@ -16,6 +16,10 @@ namespace HotelManager.UI
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
 
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
             this.lblFirstName = new System.Windows.Forms.Label();
@@ -154,6 +158,9 @@ namespace HotelManager.UI
             this.PerformLayout();
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if(disposing && (components != null))

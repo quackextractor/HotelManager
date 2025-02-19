@@ -8,93 +8,97 @@ namespace HotelManager.UI
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.DataGridView dgvOrders;
         private System.Windows.Forms.Label lblSearchType;
-        private System.Windows.Forms.DateTimePicker dtpSearchDate; // Added DateTimePicker
+        private System.Windows.Forms.DateTimePicker dtpSearchDate;
 
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
-            this.cmbSearchType = new System.Windows.Forms.ComboBox();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.dtpSearchDate = new System.Windows.Forms.DateTimePicker(); // Initialize DateTimePicker
-            this.btnSearch = new System.Windows.Forms.Button();
-            this.dgvOrders = new System.Windows.Forms.DataGridView();
-            this.lblSearchType = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).BeginInit();
-            this.SuspendLayout();
+            cmbSearchType = new System.Windows.Forms.ComboBox();
+            txtSearch = new System.Windows.Forms.TextBox();
+            dtpSearchDate = new System.Windows.Forms.DateTimePicker();
+            btnSearch = new System.Windows.Forms.Button();
+            dgvOrders = new System.Windows.Forms.DataGridView();
+            lblSearchType = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
+            SuspendLayout();
             // 
             // cmbSearchType
             // 
-            this.cmbSearchType.FormattingEnabled = true;
-            this.cmbSearchType.Items.AddRange(new object[] {
-            "Číslo objednávky",
-            "Jméno osoby",
-            "Datum",
-            "Číslo místnosti"});
-            this.cmbSearchType.Location = new System.Drawing.Point(12, 29);
-            this.cmbSearchType.Name = "cmbSearchType";
-            this.cmbSearchType.Size = new System.Drawing.Size(150, 23);
-            this.cmbSearchType.TabIndex = 0;
+            cmbSearchType.CausesValidation = false;
+            cmbSearchType.FormattingEnabled = true;
+            cmbSearchType.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            cmbSearchType.Items.AddRange(new object[] { "Číslo objednávky", "Jméno osoby", "Datum", "Číslo místnosti" });
+            cmbSearchType.Location = new System.Drawing.Point(12, 29);
+            cmbSearchType.Name = "cmbSearchType";
+            cmbSearchType.Size = new System.Drawing.Size(150, 23);
+            cmbSearchType.TabIndex = 0;
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(180, 29);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(150, 23);
-            this.txtSearch.TabIndex = 1;
+            txtSearch.Location = new System.Drawing.Point(180, 29);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new System.Drawing.Size(150, 23);
+            txtSearch.TabIndex = 1;
             // 
             // dtpSearchDate
             // 
-            this.dtpSearchDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpSearchDate.Location = new System.Drawing.Point(180, 29);
-            this.dtpSearchDate.Name = "dtpSearchDate";
-            this.dtpSearchDate.Size = new System.Drawing.Size(150, 23);
-            this.dtpSearchDate.TabIndex = 1;
-            this.dtpSearchDate.Visible = false; // Initially hidden
+            dtpSearchDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            dtpSearchDate.Location = new System.Drawing.Point(180, 29);
+            dtpSearchDate.Name = "dtpSearchDate";
+            dtpSearchDate.Size = new System.Drawing.Size(150, 23);
+            dtpSearchDate.TabIndex = 1;
+            dtpSearchDate.Visible = false;
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(350, 29);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 23);
-            this.btnSearch.TabIndex = 2;
-            this.btnSearch.Text = "Vyhledat";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            btnSearch.Location = new System.Drawing.Point(350, 29);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new System.Drawing.Size(75, 23);
+            btnSearch.TabIndex = 2;
+            btnSearch.Text = "Vyhledat";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
             // 
             // dgvOrders
             // 
-            this.dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvOrders.Location = new System.Drawing.Point(12, 70);
-            this.dgvOrders.Name = "dgvOrders";
-            this.dgvOrders.RowTemplate.Height = 25;
-            this.dgvOrders.Size = new System.Drawing.Size(600, 300);
-            this.dgvOrders.TabIndex = 3;
-            this.dgvOrders.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvOrders_CellDoubleClick);
+            dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvOrders.Location = new System.Drawing.Point(12, 70);
+            dgvOrders.Name = "dgvOrders";
+            dgvOrders.ReadOnly = true;
+            dgvOrders.Size = new System.Drawing.Size(600, 300);
+            dgvOrders.TabIndex = 3;
+            dgvOrders.CellDoubleClick += dgvOrders_CellDoubleClick;
             // 
             // lblSearchType
             // 
-            this.lblSearchType.AutoSize = true;
-            this.lblSearchType.Location = new System.Drawing.Point(12, 9);
-            this.lblSearchType.Name = "lblSearchType";
-            this.lblSearchType.Size = new System.Drawing.Size(110, 15);
-            this.lblSearchType.TabIndex = 4;
-            this.lblSearchType.Text = "Vyhledat podle:";
+            lblSearchType.AutoSize = true;
+            lblSearchType.Location = new System.Drawing.Point(12, 9);
+            lblSearchType.Name = "lblSearchType";
+            lblSearchType.Size = new System.Drawing.Size(89, 15);
+            lblSearchType.TabIndex = 4;
+            lblSearchType.Text = "Vyhledat podle:";
             // 
             // SearchOrderForm
             // 
-            this.ClientSize = new System.Drawing.Size(624, 381);
-            this.Controls.Add(this.lblSearchType);
-            this.Controls.Add(this.dgvOrders);
-            this.Controls.Add(this.btnSearch);
-            this.Controls.Add(this.txtSearch);
-            this.Controls.Add(this.dtpSearchDate);
-            this.Controls.Add(this.cmbSearchType);
-            this.Name = "SearchOrderForm";
-            this.Text = "Vyhledat objednávku";
-            ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ClientSize = new System.Drawing.Size(624, 381);
+            Controls.Add(lblSearchType);
+            Controls.Add(dgvOrders);
+            Controls.Add(btnSearch);
+            Controls.Add(txtSearch);
+            Controls.Add(dtpSearchDate);
+            Controls.Add(cmbSearchType);
+            Text = "Vyhledat objednávku";
+            ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))

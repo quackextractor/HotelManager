@@ -8,6 +8,10 @@ namespace HotelManager.UI
         private System.Windows.Forms.Button btnLoadConfig;
         private System.Windows.Forms.Label lblFilePath;
 
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
             this.txtFilePath = new System.Windows.Forms.TextBox();
