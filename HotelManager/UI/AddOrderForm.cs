@@ -47,8 +47,6 @@ public partial class AddOrderForm : Form
             cmbRoom.SelectedIndex = 0;
     }
 
-    // Event handlers below manage user interactions with form elements
-
     private void btnAddPerson_Click(object sender, EventArgs e)
     {
         using (var addPersonForm = new AddPersonForm())

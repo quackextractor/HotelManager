@@ -10,8 +10,8 @@ namespace HotelManager.UI;
 /// </summary>
 public partial class EditOrderForm : Form
 {
-    private bool _orderNotFound;
     private Order _order;
+    private bool _orderNotFound;
 
     /// <summary>
     ///     Initializes a new instance of the EditOrderForm class with the specified order ID.
@@ -33,8 +33,6 @@ public partial class EditOrderForm : Form
     /// <summary>
     ///     Handles the Shown event after the form is displayed.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void EditOrderForm_Shown(object sender, EventArgs e)
     {
         if (_orderNotFound)
@@ -88,16 +86,12 @@ public partial class EditOrderForm : Form
         chkPaid.Checked = _order.Paid;
 
         if (_order.RoomId.HasValue)
-        {
             foreach (AddOrderForm.ComboBoxItem item in cmbRoom.Items)
-            {
                 if (item.Value == _order.RoomId.Value)
                 {
                     cmbRoom.SelectedItem = item;
                     break;
                 }
-            }
-        }
 
         lstPersons.Items.Clear();
         foreach (var person in _order.Persons)
@@ -118,7 +112,7 @@ public partial class EditOrderForm : Form
         foreach (var payment in payments)
             lstPayments.Items.Add(payment);
     }
-    
+
     private void btnAddPayment_Click(object sender, EventArgs e)
     {
         using (var paymentForm = new PaymentForm(_order.Id))
@@ -134,7 +128,7 @@ public partial class EditOrderForm : Form
         {
             var confirm = MessageBox.Show("Opravdu chcete smazat tuto platbu?",
                 "Potvrzení", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-        
+
             if (confirm == DialogResult.Yes)
             {
                 new PaymentDao().Delete(selectedPayment.Id);
@@ -146,8 +140,6 @@ public partial class EditOrderForm : Form
     /// <summary>
     ///     Saves the changes made to the order.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void btnSaveChanges_Click(object sender, EventArgs e)
     {
         if (!ValidateInputs()) return;
@@ -246,24 +238,17 @@ public partial class EditOrderForm : Form
     /// <summary>
     ///     Opens a dialog to add a new person to the order.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void btnAddPerson_Click(object sender, EventArgs e)
     {
         using (var addPersonForm = new AddPersonForm())
         {
-            if (addPersonForm.ShowDialog() == DialogResult.OK)
-            {
-                lstPersons.Items.Add(addPersonForm.Person);
-            }
+            if (addPersonForm.ShowDialog() == DialogResult.OK) lstPersons.Items.Add(addPersonForm.Person);
         }
     }
 
     /// <summary>
     ///     Removes the selected person from the order.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void btnRemovePerson_Click(object sender, EventArgs e)
     {
         if (lstPersons.SelectedIndex >= 0)
@@ -273,8 +258,6 @@ public partial class EditOrderForm : Form
     /// <summary>
     ///     Deletes the order after user confirmation.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void btnDelete_Click(object sender, EventArgs e)
     {
         var confirmation = MessageBox.Show("Opravdu chcete smazat tuto objednávku?",
@@ -282,7 +265,6 @@ public partial class EditOrderForm : Form
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Question);
         if (confirmation == DialogResult.Yes)
-        {
             try
             {
                 new OrderDao().Delete(_order.Id);
@@ -293,6 +275,5 @@ public partial class EditOrderForm : Form
             {
                 MessageBox.Show("Chyba při mazání objednávky: " + ex.Message);
             }
-        }
     }
 }

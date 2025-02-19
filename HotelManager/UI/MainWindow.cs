@@ -32,10 +32,8 @@ public partial class MainWindow : Form
             // Error was already shown in VerifyDatabaseConnectionAsync
             Application.Exit();
         else
-        {
             // Show the menu if connection is ok
             panelButtons.Visible = true;
-        }
     }
 
     /// <summary>

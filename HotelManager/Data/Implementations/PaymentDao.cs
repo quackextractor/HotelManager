@@ -74,7 +74,7 @@ public class PaymentDao : IPaymentDao
 
         return payments;
     }
-    
+
     public IEnumerable<Payment> GetByOrderId(int orderId)
     {
         var payments = new List<Payment>();
@@ -100,11 +100,13 @@ public class PaymentDao : IPaymentDao
                     payments.Add(payment);
                 }
             }
+
             _connection.Close();
         }
+
         return payments;
     }
-    
+
     public void Insert(Payment payment)
     {
         const string sql = @"INSERT INTO Payment 
