@@ -1,18 +1,20 @@
 using HotelManager.Data.Utility;
 
-namespace HotelManager.UI;
-
+namespace HotelManager.UI
+{
 public partial class MainWindow : Form
 {
-    private bool _isConnectionValid;
-
+private bool _isConnectionValid;
     public MainWindow()
     {
         InitializeComponent();
+
+        // Set fixed window style and disable certain menu items until a valid connection exists.
         FormBorderStyle = FormBorderStyle.FixedSingle;
         objednavkaToolStripMenuItem.Enabled = false;
         loadConfigToolStripMenuItem.Enabled = false;
         MaximizeBox = false;
+
         Shown += MainWindow_Shown;
     }
 
@@ -29,9 +31,11 @@ public partial class MainWindow : Form
         HideLoadingPanel();
 
         if (!_isConnectionValid)
-            ShowErrorPanel();
-        else
-            errorPanel.Visible = false;
+        {
+            // At this point the error message has already been shown in VerifyDatabaseConnectionAsync.
+            // Exit the application rather than giving the user a retry option.
+            Application.Exit();
+        }
     }
 
     private async Task VerifyDatabaseConnectionAsync()
@@ -46,7 +50,7 @@ public partial class MainWindow : Form
         catch (Exception ex)
         {
             _isConnectionValid = false;
-            MessageBox.Show($"Database connection error: {ex.Message}\nPlease configure the connection.",
+            MessageBox.Show($"Database connection error: {ex.Message}\nThe application will now close.",
                 "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
@@ -69,22 +73,14 @@ public partial class MainWindow : Form
         loadingPanel.Visible = false;
     }
 
-    private void ShowErrorPanel()
-    {
-        errorPanel.Visible = true;
-        errorPanel.BringToFront();
-    }
-
-    private async void retryButton_Click(object sender, EventArgs e)
-    {
-        await CheckConnectionAndUpdateUIAsync();
-    }
+    // Removed the ShowErrorPanel() and retryButton_Click() methods since the app now immediately exits on error.
 
     private async void loadDataToolStripMenuItem_Click(object sender, EventArgs e)
     {
         using (var dataLoaderForm = new DataLoaderForm())
         {
-            if (dataLoaderForm.ShowDialog() == DialogResult.OK) await CheckConnectionAndUpdateUIAsync();
+            if (dataLoaderForm.ShowDialog() == DialogResult.OK)
+                await CheckConnectionAndUpdateUIAsync();
         }
     }
 
@@ -103,4 +99,6 @@ public partial class MainWindow : Form
             searchOrderForm.ShowDialog();
         }
     }
+}
+
 }
