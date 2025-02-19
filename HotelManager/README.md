@@ -43,6 +43,7 @@ A comprehensive Windows Forms application for managing hotel reservations, guest
 - Windows OS
 - System.Configuration.ConfigurationManager
 - Microsoft.Data.SqlClient
+- Visual studio or C# IDE of choice
 
 ### Setup
 1. Clone repository
@@ -55,8 +56,23 @@ A comprehensive Windows Forms application for managing hotel reservations, guest
           providerName="System.Data.SqlClient"/>
    </connectionStrings>
    ```
-3. Create `HotelDB` database in SQL Server
-4. Build solution in Visual Studio
+   or in school
+   ```xml
+   <!-- App.config -->
+   <connectionStrings>
+        <add name="AutoDB" 
+             connectionString="Server=PC<ČÍSLO POČÍTAČE ZDE>;
+             Database=HotelDB;
+             User Id=sa;
+             Password=student;
+             TrustServerCertificate=true"
+             providerName="System.Data.SqlClient" 
+             />
+    </connectionStrings>
+   ```
+
+3. Create `HotelDB` database in SQL Server using files in HotelManager/TestingResources/Database directory
+4. Build solution in Visual Studio / IDE of choice
 
 ## Usage
 
