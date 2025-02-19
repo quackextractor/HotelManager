@@ -4,8 +4,14 @@ using HotelManager.Domain;
 
 namespace HotelManager.UI;
 
+/// <summary>
+///     Form for creating new hotel orders with room assignments and guest management
+/// </summary>
 public partial class AddOrderForm : Form
 {
+    /// <summary>
+    ///     Initializes form components and loads initial data
+    /// </summary>
     public AddOrderForm()
     {
         InitializeComponent();
@@ -15,6 +21,9 @@ public partial class AddOrderForm : Form
         MaximizeBox = false;
     }
 
+    /// <summary>
+    ///     Populates status dropdown with default order states
+    /// </summary>
     private void LoadStatusDropdown()
     {
         cmbStatus.Items.Clear();
@@ -23,6 +32,9 @@ public partial class AddOrderForm : Form
         cmbStatus.SelectedIndex = 0;
     }
 
+    /// <summary>
+    ///     Loads available rooms from database into dropdown
+    /// </summary>
     private void LoadRoomDropdown()
     {
         cmbRoom.Items.Clear();
@@ -33,6 +45,8 @@ public partial class AddOrderForm : Form
         if (cmbRoom.Items.Count > 0)
             cmbRoom.SelectedIndex = 0;
     }
+
+    // Event handlers below manage user interactions with form elements
 
     private void btnAddPerson_Click(object sender, EventArgs e)
     {
@@ -53,7 +67,7 @@ public partial class AddOrderForm : Form
             if (addRoomForm.ShowDialog() == DialogResult.OK)
             {
                 LoadRoomDropdown();
-                MessageBox.Show("Nová místnost je nyní k dispozici.", "Informace", MessageBoxButtons.OK,
+                MessageBox.Show("Nový pokoj je nyní k dispozici.", "Informace", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
         }
@@ -65,6 +79,9 @@ public partial class AddOrderForm : Form
             lstPersons.Items.RemoveAt(lstPersons.SelectedIndex);
     }
 
+    /// <summary>
+    ///     Validates and saves new order to database
+    /// </summary>
     private void btnSaveOrder_Click(object sender, EventArgs e)
     {
         if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
@@ -76,23 +93,22 @@ public partial class AddOrderForm : Form
 
         if (dtpCheckinDate.Value.Date < DateTime.Today)
         {
-            MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.", "Chyba", MessageBoxButtons.OK,
+            MessageBox.Show("Datum příjezdu musí být dnes nebo v budoucnu.", "Chyba", MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
         }
 
-        // Validace, zda uživatel zadal název role objednávky.
         var orderRoleName = txtOrderRole.Text.Trim();
         if (string.IsNullOrEmpty(orderRoleName))
         {
-            MessageBox.Show("Zadejte prosím název role objednávky.", "Chyba", MessageBoxButtons.OK,
+            MessageBox.Show("Prosím, zadejte název role objednávky.", "Chyba", MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
         }
 
         if (cmbStatus.SelectedItem == null)
         {
-            MessageBox.Show("Vyberte prosím status objednávky z dropdown nabídky.", "Chyba", MessageBoxButtons.OK,
+            MessageBox.Show("Prosím, vyberte stav objednávky z rozbalovací nabídky.", "Chyba", MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
         }
@@ -149,11 +165,14 @@ public partial class AddOrderForm : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Chyba při přidávání objednávky: " + ex.Message, "Chyba", MessageBoxButtons.OK,
+            MessageBox.Show("Chyba při ukládání objednávky: " + ex.Message, "Chyba", MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
         }
     }
 
+    /// <summary>
+    ///     Helper class for storing room IDs with display text in dropdown
+    /// </summary>
     public class ComboBoxItem
     {
         public ComboBoxItem(string text, int value)

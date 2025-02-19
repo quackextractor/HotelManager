@@ -5,8 +5,14 @@ using HotelManager.Domain;
 
 namespace HotelManager.UI;
 
+/// <summary>
+///     Form for adding new guests/persons to the system
+/// </summary>
 public partial class AddPersonForm : Form
 {
+    /// <summary>
+    ///     Initializes form with status dropdown
+    /// </summary>
     public AddPersonForm()
     {
         InitializeComponent();
@@ -15,10 +21,15 @@ public partial class AddPersonForm : Form
         MaximizeBox = false;
     }
 
-    // Po úspěšném uložení bude tato vlastnost obsahovat nově vytvořenou osobu
+    /// <summary>
+    ///     Contains the newly created person after successful submission
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Person Person { get; private set; }
 
+    /// <summary>
+    ///     Sets up status options in dropdown
+    /// </summary>
     private void LoadStatusDropdown()
     {
         cmbStatus.Items.Clear();
@@ -27,16 +38,17 @@ public partial class AddPersonForm : Form
         cmbStatus.SelectedIndex = 0;
     }
 
+    /// <summary>
+    ///     Validates and saves new person to database
+    /// </summary>
     private void btnSave_Click(object sender, EventArgs e)
     {
-        // Validace emailu pomocí regulárního výrazu
         if (!Regex.IsMatch(txtEmail.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
-            MessageBox.Show("Zadejte platnou emailovou adresu.");
+            MessageBox.Show("Zadejte prosím platnou e-mailovou adresu.");
             return;
         }
 
-        // Vytvoříme instanci třídy Person a naplníme ji daty z formuláře
         Person = new Person
         {
             FirstName = txtFirstName.Text.Trim(),
@@ -49,7 +61,6 @@ public partial class AddPersonForm : Form
 
         try
         {
-            // Uložíme osobu do DB pomocí DAO
             var personDao = new PersonDao();
             personDao.Insert(Person);
             MessageBox.Show("Osoba byla úspěšně uložena.");
@@ -62,6 +73,9 @@ public partial class AddPersonForm : Form
         }
     }
 
+    /// <summary>
+    ///     Closes form without saving changes
+    /// </summary>
     private void btnCancel_Click(object sender, EventArgs e)
     {
         DialogResult = DialogResult.Cancel;

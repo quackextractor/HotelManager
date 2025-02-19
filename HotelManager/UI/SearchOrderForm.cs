@@ -3,8 +3,14 @@ using HotelManager.Domain;
 
 namespace HotelManager.UI;
 
+/// <summary>
+///     A form that allows users to search for orders.
+/// </summary>
 public partial class SearchOrderForm : Form
 {
+    /// <summary>
+    ///     Initializes a new instance of the SearchOrderForm class.
+    /// </summary>
     public SearchOrderForm()
     {
         InitializeComponent();
@@ -15,6 +21,11 @@ public partial class SearchOrderForm : Form
         MaximizeBox = false;
     }
 
+    /// <summary>
+    ///     Handles the click event for the search button.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void btnSearch_Click(object sender, EventArgs e)
     {
         var searchType = cmbSearchType.SelectedItem?.ToString() ?? string.Empty;
@@ -56,6 +67,11 @@ public partial class SearchOrderForm : Form
         dgvOrders.DataSource = orders;
     }
 
+    /// <summary>
+    ///     Handles the SelectedIndexChanged event for the search type dropdown.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void CmbSearchType_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cmbSearchType.SelectedItem.ToString() == "Datum")
@@ -70,6 +86,11 @@ public partial class SearchOrderForm : Form
         }
     }
 
+    /// <summary>
+    ///     Handles the CellDoubleClick event for the orders DataGridView.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The DataGridView cell event arguments.</param>
     private void dgvOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
         if (e.RowIndex >= 0)

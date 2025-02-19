@@ -4,11 +4,18 @@ using HotelManager.Domain;
 
 namespace HotelManager.UI;
 
+/// <summary>
+///     A form for editing an order.
+/// </summary>
 public partial class EditOrderForm : Form
 {
     private bool _orderNotFound;
     private Order order;
 
+    /// <summary>
+    ///     Initializes a new instance of the EditOrderForm class with the specified order ID.
+    /// </summary>
+    /// <param name="orderId">The ID of the order to edit.</param>
     public EditOrderForm(int orderId)
     {
         InitializeComponent();
@@ -22,7 +29,11 @@ public partial class EditOrderForm : Form
         Shown += EditOrderForm_Shown;
     }
 
-    // This event fires after the form is displayed.
+    /// <summary>
+    ///     Handles the Shown event after the form is displayed.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void EditOrderForm_Shown(object sender, EventArgs e)
     {
         if (_orderNotFound)
@@ -35,6 +46,9 @@ public partial class EditOrderForm : Form
         }
     }
 
+    /// <summary>
+    ///     Loads the order status options into the status dropdown.
+    /// </summary>
     private void LoadStatusDropdown()
     {
         cmbStatus.Items.Clear();
@@ -42,6 +56,9 @@ public partial class EditOrderForm : Form
         cmbStatus.Items.Add("confirmed");
     }
 
+    /// <summary>
+    ///     Loads available rooms into the room dropdown.
+    /// </summary>
     private void LoadRoomDropdown()
     {
         cmbRoom.Items.Clear();
@@ -53,6 +70,10 @@ public partial class EditOrderForm : Form
             cmbRoom.SelectedIndex = 0;
     }
 
+    /// <summary>
+    ///     Loads the order details into the form using the specified order ID.
+    /// </summary>
+    /// <param name="orderId">The ID of the order to load.</param>
     private void LoadOrder(int orderId)
     {
         var orderDao = new OrderDao();
@@ -88,6 +109,11 @@ public partial class EditOrderForm : Form
         }
     }
 
+    /// <summary>
+    ///     Saves the changes made to the order.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void btnSaveChanges_Click(object sender, EventArgs e)
     {
         if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
@@ -121,7 +147,6 @@ public partial class EditOrderForm : Form
 
         try
         {
-            // Aktualizace vlastností objednávky.
             order.PricePerNight = double.Parse(txtPricePerNight.Text);
             order.Nights = int.Parse(txtNights.Text);
             order.CheckinDate = dtpCheckinDate.Value;
@@ -143,10 +168,8 @@ public partial class EditOrderForm : Form
             var orderDao = new OrderDao();
             var orderRoleDao = new OrderRoleDao();
 
-            // Aktualizace objednávky.
             orderDao.Update(order);
 
-            // Smazání starých rolí.
             orderRoleDao.DeleteByOrderId(order.Id);
 
             foreach (var person in order.Persons)
@@ -176,6 +199,11 @@ public partial class EditOrderForm : Form
         }
     }
 
+    /// <summary>
+    ///     Opens a dialog to add a new person to the order.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void btnAddPerson_Click(object sender, EventArgs e)
     {
         using (var addPersonForm = new AddPersonForm())
@@ -188,12 +216,22 @@ public partial class EditOrderForm : Form
         }
     }
 
+    /// <summary>
+    ///     Removes the selected person from the order.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void btnRemovePerson_Click(object sender, EventArgs e)
     {
         if (lstPersons.SelectedIndex >= 0)
             lstPersons.Items.RemoveAt(lstPersons.SelectedIndex);
     }
 
+    /// <summary>
+    ///     Deletes the order after user confirmation.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void btnDelete_Click(object sender, EventArgs e)
     {
         var confirmation = MessageBox.Show("Opravdu chcete smazat tuto objednávku?",

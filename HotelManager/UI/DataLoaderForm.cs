@@ -5,8 +5,14 @@ using HotelManager.Domain;
 
 namespace HotelManager.UI;
 
+/// <summary>
+///     Form for loading data from an XML file.
+/// </summary>
 public partial class DataLoaderForm : Form
 {
+    /// <summary>
+    ///     Initializes the form and sets up drag-and-drop functionality.
+    /// </summary>
     public DataLoaderForm()
     {
         InitializeComponent();
@@ -17,18 +23,27 @@ public partial class DataLoaderForm : Form
         MaximizeBox = false;
     }
 
+    /// <summary>
+    ///     Handles drag-enter event to allow file drop.
+    /// </summary>
     private void DataLoaderForm_DragEnter(object sender, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
             e.Effect = DragDropEffects.Copy;
     }
 
+    /// <summary>
+    ///     Handles drag-drop event to capture the file path.
+    /// </summary>
     private void DataLoaderForm_DragDrop(object sender, DragEventArgs e)
     {
         string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
         if (files.Length > 0) txtFilePath.Text = files[0];
     }
 
+    /// <summary>
+    ///     Opens a file dialog to select an XML file.
+    /// </summary>
     private void btnBrowse_Click(object sender, EventArgs e)
     {
         var ofd = new OpenFileDialog();
@@ -36,6 +51,9 @@ public partial class DataLoaderForm : Form
         if (ofd.ShowDialog() == DialogResult.OK) txtFilePath.Text = ofd.FileName;
     }
 
+    /// <summary>
+    ///     Loads configuration data from the selected XML file.
+    /// </summary>
     private void btnLoadConfig_Click(object sender, EventArgs e)
     {
         var filePath = txtFilePath.Text.Trim();
