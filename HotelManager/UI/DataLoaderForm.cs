@@ -32,7 +32,7 @@ public partial class DataLoaderForm : Form
     private void btnBrowse_Click(object sender, EventArgs e)
     {
         var ofd = new OpenFileDialog();
-        ofd.Filter = "Config files (*.config;*.xml)|*.config;*.xml|All files (*.*)|*.*";
+        ofd.Filter = "XML files (*.xml)|*.xml";
         if (ofd.ShowDialog() == DialogResult.OK) txtFilePath.Text = ofd.FileName;
     }
 
@@ -41,7 +41,7 @@ public partial class DataLoaderForm : Form
         var filePath = txtFilePath.Text.Trim();
         if (!File.Exists(filePath))
         {
-            MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Soubor nebyl nalezen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -96,7 +96,8 @@ public partial class DataLoaderForm : Form
             foreach (var orderXml in tableset.Orders)
             {
                 if (!roomNumberToId.TryGetValue(orderXml.RoomNumber, out var roomId))
-                    throw new Exception($"Room number {orderXml.RoomNumber} not found for order {orderXml.XmlId}.");
+                    throw new Exception(
+                        $"Číslo pokoje {orderXml.RoomNumber} nebylo nalezeno pro objednávku {orderXml.XmlId}.");
 
                 var order = new Order
                 {
@@ -117,10 +118,10 @@ public partial class DataLoaderForm : Form
             foreach (var roleXml in tableset.OrderRoles)
             {
                 if (!orderXmlIdToId.TryGetValue(roleXml.OrderXmlId, out var orderId))
-                    throw new Exception($"Order XML ID {roleXml.OrderXmlId} not found.");
+                    throw new Exception($"Objednávka s XML ID {roleXml.OrderXmlId} nebyla nalezena.");
 
                 if (!emailToPersonId.TryGetValue(roleXml.PersonEmail, out var personId))
-                    throw new Exception($"Person email {roleXml.PersonEmail} not found.");
+                    throw new Exception($"Osoba s e-mailem {roleXml.PersonEmail} nebyla nalezena.");
 
                 var role = new OrderRole
                 {
@@ -136,7 +137,7 @@ public partial class DataLoaderForm : Form
             foreach (var paymentXml in tableset.Payments)
             {
                 if (!orderXmlIdToId.TryGetValue(paymentXml.OrderXmlId, out var orderId))
-                    throw new Exception($"Order XML ID {paymentXml.OrderXmlId} not found.");
+                    throw new Exception($"Objednávka s XML ID {paymentXml.OrderXmlId} nebyla nalezena.");
 
                 var payment = new Payment
                 {
@@ -149,20 +150,21 @@ public partial class DataLoaderForm : Form
                 paymentDao.Insert(payment);
             }
 
-            MessageBox.Show("Data imported successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Data byla úspěšně importována!", "Success", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             Close();
         }
         catch (Exception ex)
         {
-            var errorMessage = "An error occurred while importing data.\n";
+            var errorMessage = "Při importu dat došlo k chybě.\n";
             if (ex.Message.Contains("CK__Order_checkin"))
                 errorMessage +=
-                    "One or more orders have a check-in date set in the past. Please ensure that all check-in dates are today or in the future.";
+                    "Jedna nebo více objednávek má datum check-inu nastavené v minulosti. Ujistěte se, že všechny datumy check-inu jsou dnešní nebo v budoucnosti.";
             else if (ex.Message.Contains("UNIQUE"))
-                errorMessage += "A duplicate entry was detected, violating the unique key constraint.";
+                errorMessage += "Byl zjištěn duplicitní záznam, který porušuje unikátní klíč.";
             else
                 errorMessage += ex.Message;
-            MessageBox.Show(errorMessage, "Import Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(errorMessage, "Chyba importu", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

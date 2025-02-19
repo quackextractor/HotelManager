@@ -1,17 +1,17 @@
 using HotelManager.Data.Utility;
 
-namespace HotelManager.UI
-{
+namespace HotelManager.UI;
+
 public partial class MainWindow : Form
 {
-private bool _isConnectionValid;
+    private bool _isConnectionValid;
 
     public MainWindow()
     {
         InitializeComponent();
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
-        
+
         Shown += MainWindow_Shown;
     }
 
@@ -29,19 +29,15 @@ private bool _isConnectionValid;
         HideLoadingPanel();
 
         if (!_isConnectionValid)
-        {
             // Error was already shown in VerifyDatabaseConnectionAsync
             Application.Exit();
-        }
         else
-        {
             // Show the central panel if connection is ok
             panelButtons.Visible = true;
-        }
     }
 
     /// <summary>
-    /// Checks the connection without freezing UI
+    ///     Checks the connection without freezing UI
     /// </summary>
     private async Task VerifyDatabaseConnectionAsync()
     {
@@ -56,8 +52,8 @@ private bool _isConnectionValid;
         {
             _isConnectionValid = false;
             MessageBox.Show(
-                $"Database connection error: {ex.Message}\nThe application will now close.",
-                "Database Error",
+                $"Chyba připojení k databázi: {ex.Message}\nAplikace se nyní ukončí.",
+                "Chyba databáze",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
         }
@@ -108,6 +104,4 @@ private bool _isConnectionValid;
     {
         Application.Exit();
     }
-}
-
 }

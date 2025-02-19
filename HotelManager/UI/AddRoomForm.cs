@@ -3,18 +3,30 @@ using HotelManager.Domain;
 
 namespace HotelManager.UI;
 
+/// <summary>
+/// Form for adding a new room to the database.
+/// </summary>
 public partial class AddRoomForm : Form
 {
+    /// <summary>
+    /// Initializes the AddRoomForm.
+    /// </summary>
     public AddRoomForm()
     {
         InitializeComponent();
-        FormBorderStyle = FormBorderStyle.FixedSingle;
+        FormBorderStyle = FormBorderStyle.FixedSingle; 
         MaximizeBox = false;
     }
 
-    // Uloží novou místnost do DB
+    /// <summary>
+    /// Handles the click event for the "Save Room" button.
+    /// Validates input fields and saves the new room to the database.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">Event arguments.</param>
     private void btnSaveRoom_Click(object sender, EventArgs e)
     {
+        // Validate input fields
         if (string.IsNullOrWhiteSpace(txtRoomNumber.Text) ||
             string.IsNullOrWhiteSpace(txtRoomType.Text) ||
             !int.TryParse(txtCapacity.Text, out var capacity) ||
@@ -24,6 +36,7 @@ public partial class AddRoomForm : Form
             return;
         }
 
+        // Create a new Room object
         var room = new Room
         {
             RoomNumber = txtRoomNumber.Text.Trim(),
@@ -35,10 +48,15 @@ public partial class AddRoomForm : Form
         try
         {
             var roomDao = new RoomDao();
+            
+            // Insert room into the database
             roomDao.Insert(room);
+
             MessageBox.Show("Místnost byla úspěšně přidána.");
             DialogResult = DialogResult.OK;
-            Close();
+            
+            // Close the form
+            Close(); 
         }
         catch (Exception ex)
         {
@@ -46,6 +64,12 @@ public partial class AddRoomForm : Form
         }
     }
 
+    /// <summary>
+    /// Handles the click event for the "Cancel" button.
+    /// Closes the form without saving.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">Event arguments.</param>
     private void btnCancel_Click(object sender, EventArgs e)
     {
         DialogResult = DialogResult.Cancel;

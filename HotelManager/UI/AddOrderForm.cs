@@ -53,7 +53,8 @@ public partial class AddOrderForm : Form
             if (addRoomForm.ShowDialog() == DialogResult.OK)
             {
                 LoadRoomDropdown();
-                MessageBox.Show("Nová místnost je nyní k dispozici.", "Informace", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Nová místnost je nyní k dispozici.", "Informace", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
         }
     }
@@ -68,13 +69,15 @@ public partial class AddOrderForm : Form
     {
         if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
         {
-            MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.", "Chyba",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         if (dtpCheckinDate.Value.Date < DateTime.Today)
         {
-            MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.", "Chyba", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
             return;
         }
 
@@ -82,13 +85,15 @@ public partial class AddOrderForm : Form
         var orderRoleName = txtOrderRole.Text.Trim();
         if (string.IsNullOrEmpty(orderRoleName))
         {
-            MessageBox.Show("Zadejte prosím název role objednávky.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Zadejte prosím název role objednávky.", "Chyba", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
             return;
         }
-        
+
         if (cmbStatus.SelectedItem == null)
         {
-            MessageBox.Show("Vyberte prosím status objednávky z dropdown nabídky.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Vyberte prosím status objednávky z dropdown nabídky.", "Chyba", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
             return;
         }
 
@@ -112,15 +117,13 @@ public partial class AddOrderForm : Form
 
             order.Persons = new List<Person>();
             foreach (var item in lstPersons.Items)
-            {
                 if (item is Person person)
                     order.Persons.Add(person);
-            }
 
             var personDao = new PersonDao();
             var orderDao = new OrderDao();
             var orderRoleDao = new OrderRoleDao();
-            
+
             orderDao.Insert(order);
 
             foreach (var person in order.Persons)
@@ -140,12 +143,14 @@ public partial class AddOrderForm : Form
                 orderRoleDao.Insert(role);
             }
 
-            MessageBox.Show("Objednávka byla úspěšně přidána.", "Informace", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Objednávka byla úspěšně přidána.", "Informace", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Chyba při přidávání objednávky: " + ex.Message, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Chyba při přidávání objednávky: " + ex.Message, "Chyba", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
         }
     }
 

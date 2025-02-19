@@ -6,8 +6,8 @@ namespace HotelManager.UI;
 
 public partial class EditOrderForm : Form
 {
+    private bool _orderNotFound;
     private Order order;
-    private bool _orderNotFound = false;
 
     public EditOrderForm(int orderId)
     {
@@ -19,7 +19,7 @@ public partial class EditOrderForm : Form
         MaximizeBox = false;
 
         // Delay error handling until after the form is displayed.
-        this.Shown += EditOrderForm_Shown;
+        Shown += EditOrderForm_Shown;
     }
 
     // This event fires after the form is displayed.
@@ -27,10 +27,10 @@ public partial class EditOrderForm : Form
     {
         if (_orderNotFound)
         {
-            MessageBox.Show("Objednávka nebyla nalezena.", "Chyba", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Objednávka nebyla nalezena.", "Chyba",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
             // Optionally set a DialogResult so the calling code can react.
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
             Close();
         }
     }
@@ -65,27 +65,21 @@ public partial class EditOrderForm : Form
             cmbStatus.SelectedItem = order.Status;
             chkPaid.Checked = order.Paid;
             if (order.RoomId.HasValue)
-            {
                 foreach (AddOrderForm.ComboBoxItem item in cmbRoom.Items)
-                {
                     if (item.Value == order.RoomId.Value)
                     {
                         cmbRoom.SelectedItem = item;
                         break;
                     }
-                }
-            }
 
             lstPersons.Items.Clear();
             if (order.Persons != null)
-            {
                 foreach (var person in order.Persons)
                     lstPersons.Items.Add(person);
-            }
 
             var orderRoleDao = new OrderRoleDao();
             var roles = orderRoleDao.GetByOrderId(order.Id);
-            txtOrderRole.Text = (roles != null && roles.Any()) ? roles.First().Role : "customer";
+            txtOrderRole.Text = roles != null && roles.Any() ? roles.First().Role : "customer";
         }
         else
         {
@@ -95,94 +89,92 @@ public partial class EditOrderForm : Form
     }
 
     private void btnSaveChanges_Click(object sender, EventArgs e)
-{
-    if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
     {
-        MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.", 
-                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        return;
-    }
-
-    if (dtpCheckinDate.Value.Date < DateTime.Today)
-    {
-        MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.", 
-                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        return;
-    }
-
-    var orderRoleName = txtOrderRole.Text.Trim();
-    if (string.IsNullOrEmpty(orderRoleName))
-    {
-        MessageBox.Show("Zadejte prosím název role objednávky.", 
-                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        return;
-    }
-    
-    if (cmbStatus.SelectedItem == null)
-    {
-        MessageBox.Show("Vyberte prosím status objednávky z dropdown nabídky.", 
-                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        return;
-    }
-
-    try
-    {
-        // Aktualizace vlastností objednávky.
-        order.PricePerNight = double.Parse(txtPricePerNight.Text);
-        order.Nights = int.Parse(txtNights.Text);
-        order.CheckinDate = dtpCheckinDate.Value;
-        order.Status = cmbStatus.SelectedItem.ToString();
-        order.Paid = chkPaid.Checked;
-
-        if (cmbRoom.SelectedItem != null)
+        if (!Regex.IsMatch(txtPricePerNight.Text, @"^\d+(\.\d{1,2})?$"))
         {
-            var selectedRoom = cmbRoom.SelectedItem as AddOrderForm.ComboBoxItem;
-            order.RoomId = selectedRoom?.Value;
+            MessageBox.Show("Cena za noc musí být číslo s maximálně dvěma desetinnými místy.",
+                "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        order.Persons = new List<Person>();
-        foreach (var item in lstPersons.Items)
+        if (dtpCheckinDate.Value.Date < DateTime.Today)
         {
-            if (item is Person person)
-                order.Persons.Add(person);
+            MessageBox.Show("Datum příjezdu musí být dnešní nebo budoucí datum.",
+                "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        var personDao = new PersonDao();
-        var orderDao = new OrderDao();
-        var orderRoleDao = new OrderRoleDao();
-
-        // Aktualizace objednávky.
-        orderDao.Update(order);
-
-        // Smazání starých rolí.
-        orderRoleDao.DeleteByOrderId(order.Id);
-
-        foreach (var person in order.Persons)
+        var orderRoleName = txtOrderRole.Text.Trim();
+        if (string.IsNullOrEmpty(orderRoleName))
         {
-            var existingPerson = personDao.GetByEmail(person.Email);
-            if (existingPerson != null)
-                person.Id = existingPerson.Id;
-            else
-                personDao.Insert(person);
+            MessageBox.Show("Zadejte prosím název role objednávky.",
+                "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
 
-            var role = new OrderRole
+        if (cmbStatus.SelectedItem == null)
+        {
+            MessageBox.Show("Vyberte prosím status objednávky z dropdown nabídky.",
+                "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        try
+        {
+            // Aktualizace vlastností objednávky.
+            order.PricePerNight = double.Parse(txtPricePerNight.Text);
+            order.Nights = int.Parse(txtNights.Text);
+            order.CheckinDate = dtpCheckinDate.Value;
+            order.Status = cmbStatus.SelectedItem.ToString();
+            order.Paid = chkPaid.Checked;
+
+            if (cmbRoom.SelectedItem != null)
             {
-                OrderId = order.Id,
-                PersonId = person.Id,
-                Role = orderRoleName
-            };
-            orderRoleDao.Insert(role);
-        }
+                var selectedRoom = cmbRoom.SelectedItem as AddOrderForm.ComboBoxItem;
+                order.RoomId = selectedRoom?.Value;
+            }
 
-        MessageBox.Show("Objednávka byla úspěšně upravena.");
-        Close();
+            order.Persons = new List<Person>();
+            foreach (var item in lstPersons.Items)
+                if (item is Person person)
+                    order.Persons.Add(person);
+
+            var personDao = new PersonDao();
+            var orderDao = new OrderDao();
+            var orderRoleDao = new OrderRoleDao();
+
+            // Aktualizace objednávky.
+            orderDao.Update(order);
+
+            // Smazání starých rolí.
+            orderRoleDao.DeleteByOrderId(order.Id);
+
+            foreach (var person in order.Persons)
+            {
+                var existingPerson = personDao.GetByEmail(person.Email);
+                if (existingPerson != null)
+                    person.Id = existingPerson.Id;
+                else
+                    personDao.Insert(person);
+
+                var role = new OrderRole
+                {
+                    OrderId = order.Id,
+                    PersonId = person.Id,
+                    Role = orderRoleName
+                };
+                orderRoleDao.Insert(role);
+            }
+
+            MessageBox.Show("Objednávka byla úspěšně upravena.");
+            Close();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Chyba při úpravě objednávky: " + ex.Message,
+                "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
-    catch (Exception ex)
-    {
-        MessageBox.Show("Chyba při úpravě objednávky: " + ex.Message, 
-                        "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-    }
-}
 
     private void btnAddPerson_Click(object sender, EventArgs e)
     {
@@ -204,12 +196,11 @@ public partial class EditOrderForm : Form
 
     private void btnDelete_Click(object sender, EventArgs e)
     {
-        var confirmation = MessageBox.Show("Opravdu chcete smazat tuto objednávku?", 
-                                             "Potvrzení smazání", 
-                                             MessageBoxButtons.YesNo, 
-                                             MessageBoxIcon.Question);
+        var confirmation = MessageBox.Show("Opravdu chcete smazat tuto objednávku?",
+            "Potvrzení smazání",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
         if (confirmation == DialogResult.Yes)
-        {
             try
             {
                 var orderDao = new OrderDao();
@@ -221,6 +212,5 @@ public partial class EditOrderForm : Form
             {
                 MessageBox.Show("Chyba při mazání objednávky: " + ex.Message);
             }
-        }
     }
 }

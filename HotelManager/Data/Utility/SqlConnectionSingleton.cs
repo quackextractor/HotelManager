@@ -11,14 +11,12 @@ public sealed class SqlConnectionSingleton
     private SqlConnectionSingleton()
     {
         var connectionSettings = ConfigurationManager.ConnectionStrings["ConnectionString"];
-        
+
         // is empty?
         if (connectionSettings == null || string.IsNullOrWhiteSpace(connectionSettings.ConnectionString))
-        {
             throw new ConfigurationErrorsException(
                 "The connection string 'ConnectionString' is missing or empty in the configuration file.");
-        }
-        
+
         var connectionString = connectionSettings.ConnectionString;
         Connection = new SqlConnection(connectionString);
     }
