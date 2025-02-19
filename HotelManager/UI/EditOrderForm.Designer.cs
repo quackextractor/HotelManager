@@ -21,6 +21,10 @@ namespace HotelManager.UI
         private System.Windows.Forms.ListBox lstPersons;
         private System.Windows.Forms.Button btnSaveChanges;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.ListBox lstPayments;
+        private System.Windows.Forms.Button btnAddPayment;
+        private System.Windows.Forms.Button btnRemovePayment;
+
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -46,7 +50,39 @@ namespace HotelManager.UI
             this.lstPersons = new System.Windows.Forms.ListBox();
             this.btnSaveChanges = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.lstPayments = new System.Windows.Forms.ListBox();
+            this.btnAddPayment = new System.Windows.Forms.Button();
+            this.btnRemovePayment = new System.Windows.Forms.Button();
             this.SuspendLayout();
+            // 
+            // lstPayments
+            // 
+            this.lstPayments.FormattingEnabled = true;
+            this.lstPayments.ItemHeight = 15;
+            this.lstPayments.Location = new System.Drawing.Point(350, 50);
+            this.lstPayments.Name = "lstPayments";
+            this.lstPayments.Size = new System.Drawing.Size(300, 154);
+            this.lstPayments.TabIndex = 18;
+            // 
+            // btnAddPayment
+            // 
+            this.btnAddPayment.Location = new System.Drawing.Point(350, 210);
+            this.btnAddPayment.Name = "btnAddPayment";
+            this.btnAddPayment.Size = new System.Drawing.Size(100, 23);
+            this.btnAddPayment.TabIndex = 19;
+            this.btnAddPayment.Text = "Přidat platbu";
+            this.btnAddPayment.UseVisualStyleBackColor = true;
+            this.btnAddPayment.Click += new System.EventHandler(this.btnAddPayment_Click);
+            // 
+            // btnRemovePayment
+            // 
+            this.btnRemovePayment.Location = new System.Drawing.Point(475, 210);
+            this.btnRemovePayment.Name = "btnRemovePayment";
+            this.btnRemovePayment.Size = new System.Drawing.Size(100, 23);
+            this.btnRemovePayment.TabIndex = 20;
+            this.btnRemovePayment.Text = "Odebrat platbu";
+            this.btnRemovePayment.UseVisualStyleBackColor = true;
+            this.btnRemovePayment.Click += new System.EventHandler(this.btnRemovePayment_Click);
             // 
             // lblPricePerNight
             // 
@@ -207,7 +243,7 @@ namespace HotelManager.UI
             // 
             // EditOrderForm
             // 
-            this.ClientSize = new System.Drawing.Size(332, 430);
+            this.ClientSize = new System.Drawing.Size(670, 430);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.lstPersons);
@@ -226,6 +262,9 @@ namespace HotelManager.UI
             this.Controls.Add(this.lblNights);
             this.Controls.Add(this.txtPricePerNight);
             this.Controls.Add(this.lblPricePerNight);
+            this.Controls.Add(this.btnRemovePayment);
+            this.Controls.Add(this.btnAddPayment);
+            this.Controls.Add(this.lstPayments);
             this.Name = "EditOrderForm";
             this.Text = "Upravit objednávku";
             this.ResumeLayout(false);
