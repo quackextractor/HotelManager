@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using HotelManager.Data.Implementations;
 using HotelManager.Domain;
@@ -78,9 +79,8 @@ public partial class EditOrderForm : Form
     {
         var orderDao = new OrderDao();
         order = orderDao.GetById(orderId);
-        if (order != null)
         {
-            txtPricePerNight.Text = order.PricePerNight.ToString();
+            txtPricePerNight.Text = order.PricePerNight.ToString(CultureInfo.InvariantCulture);
             txtNights.Text = order.Nights.ToString();
             dtpCheckinDate.Value = order.CheckinDate;
             cmbStatus.SelectedItem = order.Status;
@@ -94,18 +94,12 @@ public partial class EditOrderForm : Form
                     }
 
             lstPersons.Items.Clear();
-            if (order.Persons != null)
-                foreach (var person in order.Persons)
-                    lstPersons.Items.Add(person);
+            foreach (var person in order.Persons)
+                lstPersons.Items.Add(person);
 
             var orderRoleDao = new OrderRoleDao();
             var roles = orderRoleDao.GetByOrderId(order.Id);
-            txtOrderRole.Text = roles != null && roles.Any() ? roles.First().Role : "customer";
-        }
-        else
-        {
-            // Mark the error so that the Shown event can handle it.
-            _orderNotFound = true;
+            txtOrderRole.Text = roles.Any() ? roles.First().Role : "customer";
         }
     }
 
@@ -147,7 +141,7 @@ public partial class EditOrderForm : Form
 
         try
         {
-            order.PricePerNight = double.Parse(txtPricePerNight.Text);
+            order.PricePerNight = double.Parse(txtPricePerNight.Text, CultureInfo.InvariantCulture);
             order.Nights = int.Parse(txtNights.Text);
             order.CheckinDate = dtpCheckinDate.Value;
             order.Status = cmbStatus.SelectedItem.ToString();

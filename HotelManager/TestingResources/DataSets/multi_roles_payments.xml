@@ -16,9 +16,9 @@
     </Persons>
     <Orders>
         <Order XmlId="ORD-VIP1" RoomNumber="VIP-1" PricePerNight="500.00" Nights="5"
-               OrderDate="2025-11-15" CheckinDate="2025-11-20" Status="Confirmed" Paid="true"/>
+               OrderDate="2025-11-15" CheckinDate="2025-11-20" Status="confirmed" Paid="true"/>
         <Order XmlId="ORD-102" RoomNumber="102" PricePerNight="110.00" Nights="3"
-               OrderDate="2025-11-16" CheckinDate="2025-11-19" Status="Completed" Paid="true"/>
+               OrderDate="2025-11-16" CheckinDate="2025-11-19" Status="pending" Paid="true"/>
     </Orders>
     <OrderRoles>
         <OrderRole OrderXmlId="ORD-VIP1" PersonEmail="emma@example.com" Role="Guest"/>

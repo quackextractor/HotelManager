@@ -13,7 +13,7 @@
     </Persons>
     <Orders>
         <Order XmlId="ORD-202" RoomNumber="301" PricePerNight="250.00" Nights="2"
-               OrderDate="2025-11-10" CheckinDate="2025-11-12" Status="Pending" Paid="false"/>
+               OrderDate="2025-11-10" CheckinDate="2025-11-12" Status="pending" Paid="false"/>
     </Orders>
     <OrderRoles>
         <OrderRole OrderXmlId="ORD-202" PersonEmail="alice@example.com" Role="Customer"/>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using HotelManager.Data.Implementations;
 using HotelManager.Domain;
@@ -117,7 +118,7 @@ public partial class AddOrderForm : Form
         {
             var order = new Order
             {
-                PricePerNight = double.Parse(txtPricePerNight.Text),
+                PricePerNight = double.Parse(txtPricePerNight.Text, CultureInfo.InvariantCulture),
                 Nights = int.Parse(txtNights.Text),
                 OrderDate = DateTime.Now,
                 CheckinDate = dtpCheckinDate.Value,

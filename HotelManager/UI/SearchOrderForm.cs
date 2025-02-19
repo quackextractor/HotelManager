@@ -1,3 +1,4 @@
+using System.Globalization;
 using HotelManager.Data.Implementations;
 using HotelManager.Domain;
 
@@ -19,6 +20,20 @@ public partial class SearchOrderForm : Form
         cmbSearchType.SelectedIndexChanged += CmbSearchType_SelectedIndexChanged;
         dtpSearchDate.Visible = false;
         MaximizeBox = false;
+        dgvOrders.CellFormatting += DgvOrders_CellFormatting;
+    }
+
+    /// <summary>
+    ///     Handles the CellFormatting event for the DataGridView to ensure proper decimal display.
+    /// </summary>
+    private void DgvOrders_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    {
+        if (e.Value is double)
+        {
+            // Format double values using invariant culture (e.g., 6.81 instead of 6,81)
+            e.Value = ((double)e.Value).ToString(CultureInfo.InvariantCulture);
+            e.FormattingApplied = true;
+        }
     }
 
     /// <summary>
@@ -70,8 +85,6 @@ public partial class SearchOrderForm : Form
     /// <summary>
     ///     Handles the SelectedIndexChanged event for the search type dropdown.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void CmbSearchType_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cmbSearchType.SelectedItem.ToString() == "Datum")
@@ -89,8 +102,6 @@ public partial class SearchOrderForm : Form
     /// <summary>
     ///     Handles the CellDoubleClick event for the orders DataGridView.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The DataGridView cell event arguments.</param>
     private void dgvOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
         if (e.RowIndex >= 0)

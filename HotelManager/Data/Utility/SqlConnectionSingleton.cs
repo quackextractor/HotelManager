@@ -7,12 +7,12 @@ public sealed class SqlConnectionSingleton
 {
     private static readonly Lazy<SqlConnectionSingleton> instance = new(() => new SqlConnectionSingleton());
 
-    // private -> instance may only be created here
+    // Private -> instance may only be created here
     private SqlConnectionSingleton()
     {
         var connectionSettings = ConfigurationManager.ConnectionStrings["ConnectionString"];
 
-        // is empty?
+        // Checks if connection string is empty
         if (connectionSettings == null || string.IsNullOrWhiteSpace(connectionSettings.ConnectionString))
             throw new ConfigurationErrorsException(
                 "Řetězec připojení 'ConnectionString' v konfiguračním souboru chybí nebo je prázdný.");
