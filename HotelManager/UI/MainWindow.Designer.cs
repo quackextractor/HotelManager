@@ -66,12 +66,13 @@ private System.ComponentModel.IContainer components = null;
         // 
         // buttonExit
         // 
+        buttonExit.AutoEllipsis = true;
         buttonExit.Font = new System.Drawing.Font("Segoe UI", 20F);
         buttonExit.Location = new System.Drawing.Point(44, 212);
         buttonExit.Name = "buttonExit";
         buttonExit.Size = new System.Drawing.Size(300, 60);
         buttonExit.TabIndex = 3;
-        buttonExit.Text = "Konec";
+        buttonExit.Text = "Ukončit";
         buttonExit.UseVisualStyleBackColor = true;
         buttonExit.Click += buttonExit_Click;
         // 
@@ -82,7 +83,7 @@ private System.ComponentModel.IContainer components = null;
         buttonLoadTables.Name = "buttonLoadTables";
         buttonLoadTables.Size = new System.Drawing.Size(300, 60);
         buttonLoadTables.TabIndex = 2;
-        buttonLoadTables.Text = "Načíst Tabulky";
+        buttonLoadTables.Text = "Import Tabulek";
         buttonLoadTables.UseVisualStyleBackColor = true;
         buttonLoadTables.Click += buttonLoadTables_Click;
         // 
