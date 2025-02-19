@@ -9,12 +9,9 @@ private bool _isConnectionValid;
     public MainWindow()
     {
         InitializeComponent();
-
-        // Set fixed window style and disable maximize button.
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
-
-        // Check the database connection when the main window is shown.
+        
         Shown += MainWindow_Shown;
     }
 
@@ -33,16 +30,19 @@ private bool _isConnectionValid;
 
         if (!_isConnectionValid)
         {
-            // The error message was already shown in VerifyDatabaseConnectionAsync.
+            // Error was already shown in VerifyDatabaseConnectionAsync
             Application.Exit();
         }
         else
         {
-            // Show the central panel with buttons after a successful connection.
+            // Show the central panel if connection is ok
             panelButtons.Visible = true;
         }
     }
 
+    /// <summary>
+    /// Checks the connection without freezing UI
+    /// </summary>
     private async Task VerifyDatabaseConnectionAsync()
     {
         try
@@ -75,7 +75,7 @@ private bool _isConnectionValid;
         loadingPanel.Visible = false;
     }
 
-    /// Event handler for the "Nová Objednavka" button.
+    /// Opens addOrderForm
     private void buttonNewOrder_Click(object sender, EventArgs e)
     {
         using (var addOrderForm = new AddOrderForm())
@@ -84,7 +84,7 @@ private bool _isConnectionValid;
         }
     }
 
-    /// Event handler for the "Vyhledat" button.
+    /// Opens searchOrderForm
     private void buttonSearchOrder_Click(object sender, EventArgs e)
     {
         using (var searchOrderForm = new SearchOrderForm())
@@ -93,7 +93,7 @@ private bool _isConnectionValid;
         }
     }
 
-    /// Event handler for the "Načíst Tabulky" button.
+    /// Opens dataLoaderForm
     private async void buttonLoadTables_Click(object sender, EventArgs e)
     {
         using (var dataLoaderForm = new DataLoaderForm())
@@ -103,7 +103,7 @@ private bool _isConnectionValid;
         }
     }
 
-    /// Event handler for the "Konec" button.
+    /// Exits the App
     private void buttonExit_Click(object sender, EventArgs e)
     {
         Application.Exit();
