@@ -2,14 +2,21 @@ namespace HotelManager.UI
 {
 partial class MainWindow
 {
+/// <summary>
+/// Required designer variable.
+/// </summary>
 private System.ComponentModel.IContainer components = null;
-private System.Windows.Forms.MenuStrip menuStrip1;
-private System.Windows.Forms.ToolStripMenuItem objednavkaToolStripMenuItem;
-private System.Windows.Forms.ToolStripMenuItem addOrderToolStripMenuItem;
-private System.Windows.Forms.ToolStripMenuItem searchOrderToolStripMenuItem;
-private System.Windows.Forms.ToolStripMenuItem loadConfigToolStripMenuItem;
-private Panel loadingPanel;
-private Label loadingLabel;
+
+    // Loading panel (remains unchanged)
+    private System.Windows.Forms.Panel loadingPanel;
+    private System.Windows.Forms.Label loadingLabel;
+
+    // New panel to hold central buttons
+    private System.Windows.Forms.Panel panelButtons;
+    private System.Windows.Forms.Button buttonNewOrder;
+    private System.Windows.Forms.Button buttonSearchOrder;
+    private System.Windows.Forms.Button buttonLoadTables;
+    private System.Windows.Forms.Button buttonExit;
 
     /// <summary>
     /// Clean up any resources being used.
@@ -20,105 +27,112 @@ private Label loadingLabel;
         {
             components.Dispose();
         }
-
         base.Dispose(disposing);
     }
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
-        this.components = new System.ComponentModel.Container();
-        this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-        this.objednavkaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        this.addOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        this.searchOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        this.loadConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        this.loadingPanel = new System.Windows.Forms.Panel();
-        this.loadingLabel = new System.Windows.Forms.Label();
-
-        this.menuStrip1.SuspendLayout();
-        this.loadingPanel.SuspendLayout();
-        this.SuspendLayout();
-
-        // 
-        // menuStrip1
-        // 
-        this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.objednavkaToolStripMenuItem,
-            this.loadConfigToolStripMenuItem});
-        this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-        this.menuStrip1.Name = "menuStrip1";
-        this.menuStrip1.Size = new System.Drawing.Size(800, 24);
-        this.menuStrip1.TabIndex = 0;
-
-        // 
-        // objednavkaToolStripMenuItem
-        // 
-        this.objednavkaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addOrderToolStripMenuItem,
-            this.searchOrderToolStripMenuItem});
-        this.objednavkaToolStripMenuItem.Name = "objednavkaToolStripMenuItem";
-        this.objednavkaToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
-        this.objednavkaToolStripMenuItem.Text = "Objednávka";
-
-        // 
-        // addOrderToolStripMenuItem
-        // 
-        this.addOrderToolStripMenuItem.Name = "addOrderToolStripMenuItem";
-        this.addOrderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-        this.addOrderToolStripMenuItem.Text = "Přidat objednávku";
-        this.addOrderToolStripMenuItem.Click += new System.EventHandler(this.addOrderToolStripMenuItem_Click);
-
-        // 
-        // searchOrderToolStripMenuItem
-        // 
-        this.searchOrderToolStripMenuItem.Name = "searchOrderToolStripMenuItem";
-        this.searchOrderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-        this.searchOrderToolStripMenuItem.Text = "Vyhledat objednávku";
-        this.searchOrderToolStripMenuItem.Click += new System.EventHandler(this.searchOrderToolStripMenuItem_Click);
-
-        // 
-        // loadConfigToolStripMenuItem
-        // 
-        this.loadConfigToolStripMenuItem.Name = "loadConfigToolStripMenuItem";
-        this.loadConfigToolStripMenuItem.Size = new System.Drawing.Size(126, 20);
-        this.loadConfigToolStripMenuItem.Text = "Načíst konfiguraci";
-        this.loadConfigToolStripMenuItem.Click += new System.EventHandler(this.loadDataToolStripMenuItem_Click);
-
+        loadingPanel = new System.Windows.Forms.Panel();
+        loadingLabel = new System.Windows.Forms.Label();
+        buttonExit = new System.Windows.Forms.Button();
+        buttonLoadTables = new System.Windows.Forms.Button();
+        buttonSearchOrder = new System.Windows.Forms.Button();
+        buttonNewOrder = new System.Windows.Forms.Button();
+        panelButtons = new System.Windows.Forms.Panel();
+        loadingPanel.SuspendLayout();
+        panelButtons.SuspendLayout();
+        SuspendLayout();
         // 
         // loadingPanel
         // 
-        this.loadingPanel.Controls.Add(this.loadingLabel);
-        this.loadingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.loadingPanel.BackColor = System.Drawing.Color.White;
-        this.loadingPanel.Visible = false;
-        this.loadingPanel.Location = new System.Drawing.Point(0, 24);
-        this.loadingPanel.Size = new System.Drawing.Size(800, 426);
-
+        loadingPanel.BackColor = System.Drawing.Color.White;
+        loadingPanel.Controls.Add(loadingLabel);
+        loadingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+        loadingPanel.Location = new System.Drawing.Point(0, 0);
+        loadingPanel.Name = "loadingPanel";
+        loadingPanel.Size = new System.Drawing.Size(800, 450);
+        loadingPanel.TabIndex = 0;
         // 
         // loadingLabel
         // 
-        this.loadingLabel.AutoSize = true;
-        this.loadingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, 
-                                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        this.loadingLabel.Location = new System.Drawing.Point(50, 50);
-        this.loadingLabel.Text = "Connecting to database...";
-
+        loadingLabel.AutoSize = true;
+        loadingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
+        loadingLabel.Location = new System.Drawing.Point(50, 50);
+        loadingLabel.Name = "loadingLabel";
+        loadingLabel.Size = new System.Drawing.Size(410, 39);
+        loadingLabel.TabIndex = 0;
+        loadingLabel.Text = "Připojování do databáze...";
+        // 
+        // buttonExit
+        // 
+        buttonExit.Font = new System.Drawing.Font("Segoe UI", 20F);
+        buttonExit.Location = new System.Drawing.Point(44, 212);
+        buttonExit.Name = "buttonExit";
+        buttonExit.Size = new System.Drawing.Size(300, 60);
+        buttonExit.TabIndex = 3;
+        buttonExit.Text = "Konec";
+        buttonExit.UseVisualStyleBackColor = true;
+        buttonExit.Click += buttonExit_Click;
+        // 
+        // buttonLoadTables
+        // 
+        buttonLoadTables.Font = new System.Drawing.Font("Segoe UI", 20F);
+        buttonLoadTables.Location = new System.Drawing.Point(44, 146);
+        buttonLoadTables.Name = "buttonLoadTables";
+        buttonLoadTables.Size = new System.Drawing.Size(300, 60);
+        buttonLoadTables.TabIndex = 2;
+        buttonLoadTables.Text = "Načíst Tabulky";
+        buttonLoadTables.UseVisualStyleBackColor = true;
+        buttonLoadTables.Click += buttonLoadTables_Click;
+        // 
+        // buttonSearchOrder
+        // 
+        buttonSearchOrder.Font = new System.Drawing.Font("Segoe UI", 20F);
+        buttonSearchOrder.Location = new System.Drawing.Point(44, 80);
+        buttonSearchOrder.Name = "buttonSearchOrder";
+        buttonSearchOrder.Size = new System.Drawing.Size(300, 60);
+        buttonSearchOrder.TabIndex = 1;
+        buttonSearchOrder.Text = "Vyhledat";
+        buttonSearchOrder.UseVisualStyleBackColor = true;
+        buttonSearchOrder.Click += buttonSearchOrder_Click;
+        // 
+        // buttonNewOrder
+        // 
+        buttonNewOrder.Font = new System.Drawing.Font("Segoe UI", 20F);
+        buttonNewOrder.Location = new System.Drawing.Point(44, 14);
+        buttonNewOrder.Name = "buttonNewOrder";
+        buttonNewOrder.Size = new System.Drawing.Size(300, 60);
+        buttonNewOrder.TabIndex = 0;
+        buttonNewOrder.Text = "Nová Objednavka";
+        buttonNewOrder.UseVisualStyleBackColor = true;
+        buttonNewOrder.Click += buttonNewOrder_Click;
+        // 
+        // panelButtons
+        // 
+        panelButtons.Controls.Add(buttonNewOrder);
+        panelButtons.Controls.Add(buttonSearchOrder);
+        panelButtons.Controls.Add(buttonLoadTables);
+        panelButtons.Controls.Add(buttonExit);
+        panelButtons.Location = new System.Drawing.Point(201, 96);
+        panelButtons.Name = "panelButtons";
+        panelButtons.Size = new System.Drawing.Size(400, 300);
+        panelButtons.TabIndex = 1;
+        panelButtons.Visible = false;
         // 
         // MainWindow
         // 
-        this.ClientSize = new System.Drawing.Size(800, 450);
-        this.Controls.Add(this.loadingPanel);
-        this.Controls.Add(this.menuStrip1);
-        this.MainMenuStrip = this.menuStrip1;
-        this.Name = "MainWindow";
-        this.Text = "Hotel Manager";
-
-        this.menuStrip1.ResumeLayout(false);
-        this.menuStrip1.PerformLayout();
-        this.loadingPanel.ResumeLayout(false);
-        this.loadingPanel.PerformLayout();
-        this.ResumeLayout(false);
-        this.PerformLayout();
+        ClientSize = new System.Drawing.Size(800, 450);
+        Controls.Add(panelButtons);
+        Controls.Add(loadingPanel);
+        Text = "Hotel Manager";
+        loadingPanel.ResumeLayout(false);
+        loadingPanel.PerformLayout();
+        panelButtons.ResumeLayout(false);
+        ResumeLayout(false);
     }
 }
 
