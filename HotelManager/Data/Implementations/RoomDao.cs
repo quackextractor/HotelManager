@@ -8,22 +8,22 @@ namespace HotelManager.Data.Implementations;
 
 public class RoomDao : IRoomDao
 {
-    private readonly SqlConnection connection;
+    private readonly SqlConnection _connection;
 
     public RoomDao()
     {
-        connection = SqlConnectionSingleton.Instance.Connection;
+        _connection = SqlConnectionSingleton.Instance.Connection;
     }
 
     public Room GetById(int id)
     {
         Room room = null;
-        var sql = "SELECT * FROM Room WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM Room WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -37,7 +37,7 @@ public class RoomDao : IRoomDao
                     };
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return room;
@@ -46,11 +46,11 @@ public class RoomDao : IRoomDao
     public IEnumerable<Room> GetAll()
     {
         var rooms = new List<Room>();
-        var sql = "SELECT * FROM Room";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM Room";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -67,7 +67,7 @@ public class RoomDao : IRoomDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return rooms;
@@ -75,51 +75,51 @@ public class RoomDao : IRoomDao
 
     public void Insert(Room room)
     {
-        var sql = @"INSERT INTO Room (room_number, room_type, capacity, price) 
+        const string sql = @"INSERT INTO Room (room_number, room_type, capacity, price) 
                 VALUES (@room_number, @room_type, @capacity, @price);
                 SELECT SCOPE_IDENTITY();";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@room_number", room.RoomNumber);
             cmd.Parameters.AddWithValue("@room_type", room.RoomType);
             cmd.Parameters.AddWithValue("@capacity", room.Capacity);
             cmd.Parameters.AddWithValue("@price", room.Price);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             var result = cmd.ExecuteScalar();
             if (result != null) room.Id = Convert.ToInt32(result);
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Update(Room room)
     {
-        var sql =
+        const string sql =
             "UPDATE Room SET room_number = @room_number, room_type = @room_type, capacity = @capacity, price = @price WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@room_number", room.RoomNumber);
             cmd.Parameters.AddWithValue("@room_type", room.RoomType);
             cmd.Parameters.AddWithValue("@capacity", room.Capacity);
             cmd.Parameters.AddWithValue("@price", room.Price);
             cmd.Parameters.AddWithValue("@id", room.Id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Delete(int id)
     {
-        var sql = "DELETE FROM Room WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "DELETE FROM Room WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 }

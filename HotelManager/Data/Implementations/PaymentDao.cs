@@ -8,22 +8,22 @@ namespace HotelManager.Data.Implementations;
 
 public class PaymentDao : IPaymentDao
 {
-    private readonly SqlConnection connection;
+    private readonly SqlConnection _connection;
 
     public PaymentDao()
     {
-        connection = SqlConnectionSingleton.Instance.Connection;
+        _connection = SqlConnectionSingleton.Instance.Connection;
     }
 
     public Payment GetById(int id)
     {
         Payment payment = null;
-        var sql = "SELECT * FROM Payment WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM Payment WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -38,7 +38,7 @@ public class PaymentDao : IPaymentDao
                     };
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return payment;
@@ -47,11 +47,11 @@ public class PaymentDao : IPaymentDao
     public IEnumerable<Payment> GetAll()
     {
         var payments = new List<Payment>();
-        var sql = "SELECT * FROM Payment";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM Payment";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -69,7 +69,7 @@ public class PaymentDao : IPaymentDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return payments;
@@ -77,33 +77,33 @@ public class PaymentDao : IPaymentDao
 
     public void Insert(Payment payment)
     {
-        var sql = @"INSERT INTO Payment 
+        const string sql = @"INSERT INTO Payment 
                            (order_id, amount, payment_date, payment_method, note) 
                            VALUES (@order_id, @amount, @payment_date, @payment_method, @note)";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@order_id", payment.OrderId);
             cmd.Parameters.AddWithValue("@amount", payment.Amount);
             cmd.Parameters.AddWithValue("@payment_date", payment.PaymentDate);
             cmd.Parameters.AddWithValue("@payment_method", payment.PaymentMethod);
             cmd.Parameters.AddWithValue("@note", payment.Note ?? (object)DBNull.Value);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Update(Payment payment)
     {
-        var sql = @"UPDATE Payment SET 
+        const string sql = @"UPDATE Payment SET 
                            order_id = @order_id, 
                            amount = @amount, 
                            payment_date = @payment_date, 
                            payment_method = @payment_method, 
                            note = @note 
                            WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@order_id", payment.OrderId);
             cmd.Parameters.AddWithValue("@amount", payment.Amount);
@@ -111,23 +111,23 @@ public class PaymentDao : IPaymentDao
             cmd.Parameters.AddWithValue("@payment_method", payment.PaymentMethod);
             cmd.Parameters.AddWithValue("@note", payment.Note ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@id", payment.Id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Delete(int id)
     {
-        var sql = "DELETE FROM Payment WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "DELETE FROM Payment WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 }

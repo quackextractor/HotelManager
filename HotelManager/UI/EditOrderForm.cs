@@ -11,7 +11,7 @@ namespace HotelManager.UI;
 public partial class EditOrderForm : Form
 {
     private bool _orderNotFound;
-    private Order order;
+    private Order _order;
 
     /// <summary>
     ///     Initializes a new instance of the EditOrderForm class with the specified order ID.
@@ -41,7 +41,6 @@ public partial class EditOrderForm : Form
         {
             MessageBox.Show("Objednávka nebyla nalezena.", "Chyba",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
-            // Optionally set a DialogResult so the calling code can react.
             DialogResult = DialogResult.Cancel;
             Close();
         }
@@ -78,27 +77,27 @@ public partial class EditOrderForm : Form
     private void LoadOrder(int orderId)
     {
         var orderDao = new OrderDao();
-        order = orderDao.GetById(orderId);
+        _order = orderDao.GetById(orderId);
         {
-            txtPricePerNight.Text = order.PricePerNight.ToString(CultureInfo.InvariantCulture);
-            txtNights.Text = order.Nights.ToString();
-            dtpCheckinDate.Value = order.CheckinDate;
-            cmbStatus.SelectedItem = order.Status;
-            chkPaid.Checked = order.Paid;
-            if (order.RoomId.HasValue)
+            txtPricePerNight.Text = _order.PricePerNight.ToString(CultureInfo.InvariantCulture);
+            txtNights.Text = _order.Nights.ToString();
+            dtpCheckinDate.Value = _order.CheckinDate;
+            cmbStatus.SelectedItem = _order.Status;
+            chkPaid.Checked = _order.Paid;
+            if (_order.RoomId.HasValue)
                 foreach (AddOrderForm.ComboBoxItem item in cmbRoom.Items)
-                    if (item.Value == order.RoomId.Value)
+                    if (item.Value == _order.RoomId.Value)
                     {
                         cmbRoom.SelectedItem = item;
                         break;
                     }
 
             lstPersons.Items.Clear();
-            foreach (var person in order.Persons)
+            foreach (var person in _order.Persons)
                 lstPersons.Items.Add(person);
 
             var orderRoleDao = new OrderRoleDao();
-            var roles = orderRoleDao.GetByOrderId(order.Id);
+            var roles = orderRoleDao.GetByOrderId(_order.Id);
             txtOrderRole.Text = roles.Any() ? roles.First().Role : "customer";
         }
     }
@@ -141,42 +140,39 @@ public partial class EditOrderForm : Form
 
         try
         {
-            order.PricePerNight = double.Parse(txtPricePerNight.Text, CultureInfo.InvariantCulture);
-            order.Nights = int.Parse(txtNights.Text);
-            order.CheckinDate = dtpCheckinDate.Value;
-            order.Status = cmbStatus.SelectedItem.ToString();
-            order.Paid = chkPaid.Checked;
+            _order.PricePerNight = double.Parse(txtPricePerNight.Text, CultureInfo.InvariantCulture);
+            _order.Nights = int.Parse(txtNights.Text);
+            _order.CheckinDate = dtpCheckinDate.Value;
+            _order.Status = cmbStatus.SelectedItem.ToString();
+            _order.Paid = chkPaid.Checked;
 
             if (cmbRoom.SelectedItem != null)
             {
                 var selectedRoom = cmbRoom.SelectedItem as AddOrderForm.ComboBoxItem;
-                order.RoomId = selectedRoom?.Value;
+                _order.RoomId = selectedRoom?.Value;
             }
 
-            order.Persons = new List<Person>();
+            _order.Persons = new List<Person>();
             foreach (var item in lstPersons.Items)
                 if (item is Person person)
-                    order.Persons.Add(person);
+                    _order.Persons.Add(person);
 
             var personDao = new PersonDao();
             var orderDao = new OrderDao();
             var orderRoleDao = new OrderRoleDao();
 
-            orderDao.Update(order);
+            orderDao.Update(_order);
 
-            orderRoleDao.DeleteByOrderId(order.Id);
+            orderRoleDao.DeleteByOrderId(_order.Id);
 
-            foreach (var person in order.Persons)
+            foreach (var person in _order.Persons)
             {
                 var existingPerson = personDao.GetByEmail(person.Email);
-                if (existingPerson != null)
-                    person.Id = existingPerson.Id;
-                else
-                    personDao.Insert(person);
+                person.Id = existingPerson.Id;
 
                 var role = new OrderRole
                 {
-                    OrderId = order.Id,
+                    OrderId = _order.Id,
                     PersonId = person.Id,
                     Role = orderRoleName
                 };
@@ -236,7 +232,7 @@ public partial class EditOrderForm : Form
             try
             {
                 var orderDao = new OrderDao();
-                orderDao.Delete(order.Id);
+                orderDao.Delete(_order.Id);
                 MessageBox.Show("Objednávka byla úspěšně smazána.");
                 Close();
             }

@@ -8,22 +8,22 @@ namespace HotelManager.Data.Implementations;
 
 public class PersonDao : IPersonDao
 {
-    private readonly SqlConnection connection;
+    private readonly SqlConnection _connection;
 
     public PersonDao()
     {
-        connection = SqlConnectionSingleton.Instance.Connection;
+        _connection = SqlConnectionSingleton.Instance.Connection;
     }
 
     public Person GetById(int id)
     {
         Person person = null;
-        var sql = "SELECT * FROM Person WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM Person WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -42,7 +42,7 @@ public class PersonDao : IPersonDao
                     };
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return person;
@@ -51,11 +51,11 @@ public class PersonDao : IPersonDao
     public IEnumerable<Person> GetAll()
     {
         var persons = new List<Person>();
-        var sql = "SELECT * FROM Person";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM Person";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -77,7 +77,7 @@ public class PersonDao : IPersonDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return persons;
@@ -85,11 +85,11 @@ public class PersonDao : IPersonDao
 
     public void Insert(Person person)
     {
-        var sql = @"INSERT INTO Person 
+        const string sql = @"INSERT INTO Person 
                     (first_name, last_name, email, phone, status, registration_date, last_visit_date) 
                     VALUES (@first_name, @last_name, @email, @phone, @status, @registration_date, @last_visit_date);
                     SELECT SCOPE_IDENTITY();";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@first_name", person.FirstName);
             cmd.Parameters.AddWithValue("@last_name", person.LastName);
@@ -99,17 +99,17 @@ public class PersonDao : IPersonDao
             cmd.Parameters.AddWithValue("@registration_date", person.RegistrationDate);
             cmd.Parameters.AddWithValue("@last_visit_date",
                 person.LastVisitDate.HasValue ? person.LastVisitDate.Value : DBNull.Value);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             var result = cmd.ExecuteScalar();
             if (result != null) person.Id = Convert.ToInt32(result);
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Update(Person person)
     {
-        var sql = @"UPDATE Person SET 
+        const string sql = @"UPDATE Person SET 
                                first_name = @first_name, 
                                last_name = @last_name, 
                                email = @email, 
@@ -118,7 +118,7 @@ public class PersonDao : IPersonDao
                                registration_date = @registration_date, 
                                last_visit_date = @last_visit_date 
                                WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@first_name", person.FirstName);
             cmd.Parameters.AddWithValue("@last_name", person.LastName);
@@ -129,35 +129,35 @@ public class PersonDao : IPersonDao
             cmd.Parameters.AddWithValue("@last_visit_date",
                 person.LastVisitDate.HasValue ? person.LastVisitDate.Value : DBNull.Value);
             cmd.Parameters.AddWithValue("@id", person.Id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Delete(int id)
     {
-        var sql = "DELETE FROM Person WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "DELETE FROM Person WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public IEnumerable<Person> SearchByName(string name)
     {
         var persons = new List<Person>();
-        var sql = "SELECT * FROM Person WHERE first_name LIKE @name OR last_name LIKE @name";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM Person WHERE first_name LIKE @name OR last_name LIKE @name";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@name", "%" + name + "%");
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -179,7 +179,7 @@ public class PersonDao : IPersonDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return persons;
@@ -190,12 +190,12 @@ public class PersonDao : IPersonDao
         try
         {
             Person person = null;
-            var sql = "SELECT * FROM Person WHERE email = @Email";
-            using (var cmd = new SqlCommand(sql, connection))
+            const string sql = "SELECT * FROM Person WHERE email = @Email";
+            using (var cmd = new SqlCommand(sql, _connection))
             {
                 cmd.Parameters.AddWithValue("@Email", personEmail);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                    _connection.Open();
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
@@ -223,8 +223,8 @@ public class PersonDao : IPersonDao
         }
         finally
         {
-            if (connection.State == ConnectionState.Open)
-                connection.Close();
+            if (_connection.State == ConnectionState.Open)
+                _connection.Close();
         }
     }
 }

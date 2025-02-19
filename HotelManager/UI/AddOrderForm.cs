@@ -146,10 +146,7 @@ public partial class AddOrderForm : Form
             foreach (var person in order.Persons)
             {
                 var existingPerson = personDao.GetByEmail(person.Email);
-                if (existingPerson != null)
-                    person.Id = existingPerson.Id;
-                else
-                    personDao.Insert(person);
+                person.Id = existingPerson.Id;
 
                 var role = new OrderRole
                 {

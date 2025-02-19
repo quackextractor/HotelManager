@@ -8,22 +8,22 @@ namespace HotelManager.Data.Implementations;
 
 public class OrderDao : IOrderDao
 {
-    private readonly SqlConnection connection;
+    private readonly SqlConnection _connection;
 
     public OrderDao()
     {
-        connection = SqlConnectionSingleton.Instance.Connection;
+        _connection = SqlConnectionSingleton.Instance.Connection;
     }
 
     public Order GetById(int id)
     {
         Order order = null;
-        var sql = "SELECT * FROM [Order] WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM [Order] WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -41,7 +41,7 @@ public class OrderDao : IOrderDao
                     };
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         if (order != null) order.Persons = LoadPersonsForOrder(order.Id);
@@ -51,11 +51,11 @@ public class OrderDao : IOrderDao
     public IEnumerable<Order> GetAll()
     {
         var orders = new List<Order>();
-        var sql = "SELECT * FROM [Order]";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM [Order]";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -76,7 +76,7 @@ public class OrderDao : IOrderDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return orders;
@@ -84,12 +84,12 @@ public class OrderDao : IOrderDao
 
     public void Insert(Order order)
     {
-        var sql = @"INSERT INTO [Order] 
+        const string sql = @"INSERT INTO [Order] 
                        (price_per_night, nights, order_date, checkin_date, status, paid, room_id) 
                        VALUES (@price_per_night, @nights, @order_date, @checkin_date, @status, @paid, @room_id);
                 SELECT SCOPE_IDENTITY();"; // Retrieve the newly generated ID
 
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@price_per_night", order.PricePerNight);
             cmd.Parameters.AddWithValue("@nights", order.Nights);
@@ -99,19 +99,19 @@ public class OrderDao : IOrderDao
             cmd.Parameters.AddWithValue("@paid", order.Paid);
             cmd.Parameters.AddWithValue("@room_id", order.RoomId.HasValue ? order.RoomId.Value : DBNull.Value);
 
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
-            
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
+
             var result = cmd.ExecuteScalar();
             if (result != null) order.Id = Convert.ToInt32(result);
 
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Update(Order order)
     {
-        var sql = @"UPDATE [Order] SET 
+        const string sql = @"UPDATE [Order] SET 
                            price_per_night = @price_per_night, 
                            nights = @nights, 
                            order_date = @order_date, 
@@ -120,7 +120,7 @@ public class OrderDao : IOrderDao
                            paid = @paid, 
                            room_id = @room_id 
                            WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@price_per_night", order.PricePerNight);
             cmd.Parameters.AddWithValue("@nights", order.Nights);
@@ -130,35 +130,35 @@ public class OrderDao : IOrderDao
             cmd.Parameters.AddWithValue("@paid", order.Paid);
             cmd.Parameters.AddWithValue("@room_id", order.RoomId.HasValue ? order.RoomId.Value : DBNull.Value);
             cmd.Parameters.AddWithValue("@id", order.Id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Delete(int id)
     {
-        var sql = "DELETE FROM [Order] WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "DELETE FROM [Order] WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public IEnumerable<Order> SearchByOrderNumber(string orderNumber)
     {
         var orders = new List<Order>();
-        var sql = "SELECT * FROM [Order] WHERE CONVERT(VARCHAR, id) LIKE @orderNumber";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM [Order] WHERE CONVERT(VARCHAR, id) LIKE @orderNumber";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@orderNumber", "%" + orderNumber + "%");
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -179,7 +179,7 @@ public class OrderDao : IOrderDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return orders;
@@ -188,16 +188,16 @@ public class OrderDao : IOrderDao
     public IEnumerable<Order> SearchByPersonName(string personName)
     {
         var orders = new List<Order>();
-        var sql = @"SELECT DISTINCT o.*
+        const string sql = @"SELECT DISTINCT o.*
                    FROM [Order] o 
                    INNER JOIN OrderRole orl ON o.id = orl.order_id
                    INNER JOIN Person p ON orl.person_id = p.id
                    WHERE p.first_name LIKE @personName OR p.last_name LIKE @personName";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@personName", "%" + personName + "%");
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -218,7 +218,7 @@ public class OrderDao : IOrderDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return orders;
@@ -228,12 +228,12 @@ public class OrderDao : IOrderDao
     public IEnumerable<Order> SearchByDate(DateTime date)
     {
         var orders = new List<Order>();
-        var sql = "SELECT * FROM [Order] WHERE CAST(checkin_date AS DATE) = @date";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM [Order] WHERE CAST(checkin_date AS DATE) = @date";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@date", date.Date);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -254,7 +254,7 @@ public class OrderDao : IOrderDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return orders;
@@ -263,15 +263,15 @@ public class OrderDao : IOrderDao
     private List<Person> LoadPersonsForOrder(int orderId)
     {
         var persons = new List<Person>();
-        var sql = @"SELECT p.* 
+        const string sql = @"SELECT p.* 
                    FROM Person p
                    INNER JOIN OrderRole orl ON p.id = orl.person_id
                    WHERE orl.order_id = @orderId";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@orderId", orderId);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -293,7 +293,7 @@ public class OrderDao : IOrderDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return persons;
@@ -302,15 +302,15 @@ public class OrderDao : IOrderDao
     public IEnumerable<Order> SearchByRoomNumber(string roomNumber)
     {
         var orders = new List<Order>();
-        var sql = @"SELECT o.* 
+        const string sql = @"SELECT o.* 
                    FROM [Order] o 
                    INNER JOIN Room r ON o.room_id = r.id 
                    WHERE r.room_number LIKE @roomNumber";
-        using (var cmd = new SqlCommand(sql, connection))
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@roomNumber", "%" + roomNumber + "%");
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -331,7 +331,7 @@ public class OrderDao : IOrderDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return orders;

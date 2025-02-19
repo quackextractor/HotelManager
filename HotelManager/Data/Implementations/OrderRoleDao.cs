@@ -8,22 +8,22 @@ namespace HotelManager.Data.Implementations;
 
 public class OrderRoleDao : IOrderRoleDao
 {
-    private readonly SqlConnection connection;
+    private readonly SqlConnection _connection;
 
     public OrderRoleDao()
     {
-        connection = SqlConnectionSingleton.Instance.Connection;
+        _connection = SqlConnectionSingleton.Instance.Connection;
     }
 
     public OrderRole GetById(int id)
     {
         OrderRole orderRole = null;
-        var sql = "SELECT * FROM OrderRole WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM OrderRole WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -36,7 +36,7 @@ public class OrderRoleDao : IOrderRoleDao
                     };
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return orderRole;
@@ -45,11 +45,11 @@ public class OrderRoleDao : IOrderRoleDao
     public IEnumerable<OrderRole> GetAll()
     {
         var roles = new List<OrderRole>();
-        var sql = "SELECT * FROM OrderRole";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM OrderRole";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -65,7 +65,7 @@ public class OrderRoleDao : IOrderRoleDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return roles;
@@ -73,70 +73,71 @@ public class OrderRoleDao : IOrderRoleDao
 
     public void Insert(OrderRole orderRole)
     {
-        var sql = "INSERT INTO OrderRole (person_id, order_id, role) VALUES (@person_id, @order_id, @role)";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "INSERT INTO OrderRole (person_id, order_id, role) VALUES (@person_id, @order_id, @role)";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@person_id", orderRole.PersonId);
             cmd.Parameters.AddWithValue("@order_id", orderRole.OrderId);
             cmd.Parameters.AddWithValue("@role", orderRole.Role);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Update(OrderRole orderRole)
     {
-        var sql = "UPDATE OrderRole SET person_id = @person_id, order_id = @order_id, role = @role WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql =
+            "UPDATE OrderRole SET person_id = @person_id, order_id = @order_id, role = @role WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@person_id", orderRole.PersonId);
             cmd.Parameters.AddWithValue("@order_id", orderRole.OrderId);
             cmd.Parameters.AddWithValue("@role", orderRole.Role);
             cmd.Parameters.AddWithValue("@id", orderRole.Id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void Delete(int id)
     {
-        var sql = "DELETE FROM OrderRole WHERE id = @id";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "DELETE FROM OrderRole WHERE id = @id";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@id", id);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public void DeleteByOrderId(int orderId)
     {
-        var sql = "DELETE FROM OrderRole WHERE order_id = @orderId";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "DELETE FROM OrderRole WHERE order_id = @orderId";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@orderId", orderId);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             cmd.ExecuteNonQuery();
-            connection.Close();
+            _connection.Close();
         }
     }
 
     public IEnumerable<OrderRole> GetByOrderId(int orderId)
     {
         var roles = new List<OrderRole>();
-        var sql = "SELECT * FROM OrderRole WHERE order_id = @orderId";
-        using (var cmd = new SqlCommand(sql, connection))
+        const string sql = "SELECT * FROM OrderRole WHERE order_id = @orderId";
+        using (var cmd = new SqlCommand(sql, _connection))
         {
             cmd.Parameters.AddWithValue("@orderId", orderId);
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -152,7 +153,7 @@ public class OrderRoleDao : IOrderRoleDao
                 }
             }
 
-            connection.Close();
+            _connection.Close();
         }
 
         return roles;
