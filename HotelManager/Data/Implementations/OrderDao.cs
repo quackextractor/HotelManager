@@ -101,10 +101,9 @@ public class OrderDao : IOrderDao
 
             if (connection.State != ConnectionState.Open)
                 connection.Open();
-
-            // Execute the query and retrieve the new ID
+            
             var result = cmd.ExecuteScalar();
-            if (result != null) order.Id = Convert.ToInt32(result); // Assign the new ID to the Order object
+            if (result != null) order.Id = Convert.ToInt32(result);
 
             connection.Close();
         }
@@ -153,7 +152,6 @@ public class OrderDao : IOrderDao
 
     public IEnumerable<Order> SearchByOrderNumber(string orderNumber)
     {
-        // Předpokládáme, že číslo objednávky odpovídá (části) identifikátoru.
         var orders = new List<Order>();
         var sql = "SELECT * FROM [Order] WHERE CONVERT(VARCHAR, id) LIKE @orderNumber";
         using (var cmd = new SqlCommand(sql, connection))

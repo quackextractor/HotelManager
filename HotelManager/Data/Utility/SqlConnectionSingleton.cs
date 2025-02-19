@@ -15,7 +15,7 @@ public sealed class SqlConnectionSingleton
         // is empty?
         if (connectionSettings == null || string.IsNullOrWhiteSpace(connectionSettings.ConnectionString))
             throw new ConfigurationErrorsException(
-                "The connection string 'ConnectionString' is missing or empty in the configuration file.");
+                "Řetězec připojení 'ConnectionString' v konfiguračním souboru chybí nebo je prázdný.");
 
         var connectionString = connectionSettings.ConnectionString;
         Connection = new SqlConnection(connectionString);
