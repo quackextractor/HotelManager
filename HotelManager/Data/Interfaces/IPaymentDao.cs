@@ -9,4 +9,5 @@ public interface IPaymentDao
     void Insert(Payment payment);
     void Update(Payment payment);
     void Delete(int id);
+    IEnumerable<Payment> GetByOrderId(int orderId);
 }

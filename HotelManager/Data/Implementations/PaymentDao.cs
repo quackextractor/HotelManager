@@ -74,7 +74,37 @@ public class PaymentDao : IPaymentDao
 
         return payments;
     }
-
+    
+    public IEnumerable<Payment> GetByOrderId(int orderId)
+    {
+        var payments = new List<Payment>();
+        const string sql = "SELECT * FROM Payment WHERE order_id = @order_id";
+        using (var cmd = new SqlCommand(sql, _connection))
+        {
+            cmd.Parameters.AddWithValue("@order_id", orderId);
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var payment = new Payment
+                    {
+                        Id = Convert.ToInt32(reader["id"]),
+                        OrderId = Convert.ToInt32(reader["order_id"]),
+                        Amount = Convert.ToDouble(reader["amount"]),
+                        PaymentDate = Convert.ToDateTime(reader["payment_date"]),
+                        PaymentMethod = reader["payment_method"].ToString(),
+                        Note = reader["note"].ToString()
+                    };
+                    payments.Add(payment);
+                }
+            }
+            _connection.Close();
+        }
+        return payments;
+    }
+    
     public void Insert(Payment payment)
     {
         const string sql = @"INSERT INTO Payment 
